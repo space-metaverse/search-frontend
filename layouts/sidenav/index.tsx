@@ -214,10 +214,7 @@ const Sidenav: React.FC = () => {
       </Styled.Preview>
 
       <Styled.Content>
-        <Styled.BackIconButton>
-          <ArrowLeft />
-        </Styled.BackIconButton>
-        <Styled.Title>Account Settings</Styled.Title>
+        <Styled.Title>Categories</Styled.Title>
       </Styled.Content>
 
       <Styled.Options animate={false}>

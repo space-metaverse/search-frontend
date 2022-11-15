@@ -19,7 +19,7 @@ type AppPropsWithLayout = AppProps & {
 const client = algoliasearch(process.env.NEXT_PUBLIC_ALGOLIA_APPLICATION_ID as string, process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_API_KEY as string)
 
 const api = axios.create({
-  baseURL: 'https://api.dev.tryspace.com',
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
   headers: {
     'Content-Type': 'application/json'
   }
@@ -38,18 +38,29 @@ const Root = ({ Component, pageProps }: AppPropsWithLayout): JSX.Element => {
         <TopNav />
 
         <InstantSearch
-          indexName="dev_stores_products"
+          indexName={process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME as string}
           searchClient={{
-            ...client
-            // async search(requests) {
-            //   return await fetch('https://api.dev.tryspace.com/search/product', {
-            //     method: 'POST',
-            //     headers: {
-            //       'Content-Type': 'application/json'
-            //     },
-            //     body: JSON.stringify({ requests })
-            //   }).then(async res => await res.json())
-            // }
+            ...client,
+
+            async search(requests) {
+              const {
+                data
+              } = await api.post('/search/products', {
+                requests
+              })
+
+              return data
+            },
+
+            async searchForFacetValues(requests) {
+              const {
+                data
+              } = await api.post('/search/products/facet', {
+                requests
+              })
+
+              return data
+            }
           }}
         >
           <Layout>

@@ -22,10 +22,22 @@ const Page = styled.div`
   flex-direction: column;
 `
 
+const Title = styled.h2`
+  ${({ theme }) => theme.fonts.size['3xl']};
+  color: ${({ theme }) => theme.colors.dark['800']};
+  margin-top: 1.5rem;
+  font-weight: ${({ theme }) => theme.fonts.weight.normal};
+
+  b {
+    margin-left: .5rem;
+    font-weight: ${({ theme }) => theme.fonts.weight.bold};
+  }
+`
+
 const Products = styled.div`
   gap: 1.5rem;
   display: flex;
-  margin-top: 2rem;
+  margin-top: 1.5rem;
   flex-direction: column;
 `
 
@@ -74,6 +86,15 @@ const App: NextPage = () => {
         onChange={({ target }) => setSearch(target.value)}
         placeholder="Search for products or stores ..."
       />
+
+      {debounce && groupByStore.length > 0 && (
+        <Title>
+          Search Results:
+          <b>
+            {groupByStore.length} store{groupByStore.length > 1 ? 's' : ''}
+          </b>
+        </Title>
+      )}
 
       <Products>
         {groupByStore.map((store) => (

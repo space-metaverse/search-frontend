@@ -11,7 +11,7 @@ export type StoreProps = RoomProps & {
 const Store: React.FC<StoreProps> = ({
   name,
   author,
-  hub_id: hubId,
+  hub_slug: hubSlug,
   products,
   description
 }) => (
@@ -25,7 +25,7 @@ const Store: React.FC<StoreProps> = ({
         <p>{description}</p>
 
         <Link
-          href={`https://app.tryspace.com/${hubId}`}
+          href={`https://app.tryspace.com/${hubSlug}`}
           target="_blank"
         >
           <Button
@@ -42,19 +42,20 @@ const Store: React.FC<StoreProps> = ({
         {products.map(({
           name,
           price,
+          currency,
           objectID,
           thumbnail_url: thumbnailUrl
         }) => (
           <Styles.Product
             key={objectID}
-            href={`https://app.tryspace.com/${hubId}/product/${objectID}`}
+            href={`https://app.tryspace.com/${hubSlug}/product/${objectID}`}
             target="_blank"
           >
             <Card image={thumbnailUrl}>
               <h2>{name}</h2>
               <span>
                 {price
-                  ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(price)
+                  ? new Intl.NumberFormat('en-US', { style: 'currency', currency: currency ?? 'USD' }).format(price)
                   : '-'}
               </span>
             </Card>

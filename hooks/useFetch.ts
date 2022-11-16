@@ -33,8 +33,6 @@ const useFetch = <T>(url: string | null): {
 
   const loading = !data && !error
 
-  console.log({ data })
-
   return {
     data: data ?? undefined,
     error,

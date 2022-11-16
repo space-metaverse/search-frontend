@@ -10,6 +10,7 @@ const Card = styled.div`
 
 const Wrapper = styled.div`
   gap: 1rem;
+  width: 100%;
   display: flex;
   flex-direction: column;
 `

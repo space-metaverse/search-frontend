@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react'
+import InfiniteScroll from 'react-infinite-scroller'
 
 import { TextInput } from '@space-metaverse-ag/space-ui'
+import Spinner from 'components/Spinner'
 import Card, { type StoreProps } from 'components/store'
 import useDebounce from 'hooks/useDebounce'
 import useFetch from 'hooks/useFetch'
@@ -14,6 +16,7 @@ interface RequestSearchProductsProps {
   hits: ProductProps[]
   page: number
   params: string
+  nbPages: number
 }
 
 const Page = styled.div`
@@ -36,19 +39,29 @@ const Title = styled.h2`
 
 const Products = styled.div`
   gap: 1.5rem;
+  height: 100%;
   display: flex;
+  position: relative;
   margin-top: 1.5rem;
+  align-items: center;
   flex-direction: column;
+  justify-content: center;
+
+  .spinner {
+    margin: 2rem 0;
+  }
 `
 
 const App: NextPage = () => {
+  const [size, setSize] = useState(0)
   const [search, setSearch] = useState('')
 
   const debounce = useDebounce(search)
 
   const {
-    data
-  } = useFetch<RequestSearchProductsProps>('/search/products')
+    data,
+    loading
+  } = useFetch<RequestSearchProductsProps>(`/search/products?search=${debounce}`)
 
   const groupByStore = useMemo(() => {
     if (data) {
@@ -72,6 +85,8 @@ const App: NextPage = () => {
 
     return []
   }, [data])
+
+  console.log({ data, size, loading })
 
   return (
     <Page>
@@ -97,9 +112,19 @@ const App: NextPage = () => {
       )}
 
       <Products>
-        {groupByStore.map((store) => (
-          <Card key={store.hub_id} {...store} />
-        ))}
+        {loading && <Spinner />}
+
+        <InfiniteScroll
+          loader={<Spinner />}
+          hasMore={data ? data.page >= data.nbPages : false}
+          loadMore={() => setSize((prev) => prev + 1)}
+          pageStart={0}
+          useWindow={false}
+        >
+          {!loading && groupByStore.map((store) => (
+            <Card key={store.hub_id} {...store} />
+          ))}
+        </InfiniteScroll>
       </Products>
     </Page>
   )

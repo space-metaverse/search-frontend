@@ -116,10 +116,11 @@ export const Preview = styled.div`
 `
 
 export const Wrapper = styled.div<WrapperStylesProps>`
+  top: 5rem;
   width: 100%;
   height: fit-content;
   display: flex;
-  position: relative;
+  position: sticky;
   max-width: 19.5rem;
   border-radius: ${({ theme }) => theme.radius['2xl']};
   flex-direction: column;

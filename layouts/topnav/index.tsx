@@ -1,43 +1,11 @@
 import { useState } from 'react'
 
-import { Popover } from '@space-metaverse-ag/space-ui'
 import { Logout as IconLogout } from '@space-metaverse-ag/space-ui/icons'
 import Image from 'next/image'
-import { useAppSelector } from 'redux/hooks'
 
 import Styled from './styles'
 
 const routes = [
-  {
-    route: 'https://app.tryspace.com/token',
-    label: 'token',
-    disabled: true,
-    isExternal: true
-  },
-  {
-    route: 'https://app.tryspace.com/litepaper',
-    label: 'litepaper',
-    disabled: true,
-    isExternal: true
-  },
-  {
-    route: 'https://app.tryspace.com/create-space',
-    label: 'builder',
-    disabled: false,
-    isExternal: true
-  },
-  {
-    route: '/marketplace',
-    label: 'marketplace',
-    disabled: true,
-    isExternal: false
-  },
-  {
-    route: 'https://app.tryspace.com/about',
-    label: 'about',
-    disabled: true,
-    isExternal: true
-  },
   {
     route: 'https://app.tryspace.com/faq',
     label: 'faq',
@@ -48,14 +16,6 @@ const routes = [
 
 const TopNav: React.FC = () => {
   const [responsive, setResponsive] = useState(false)
-
-  const { username } = useAppSelector(state => state.account)
-
-  const logout = (): void => {
-    window.localStorage.removeItem('immerToken')
-
-    location.reload()
-  }
 
   return (
     <Styled.Wrapper show={responsive}>
@@ -88,30 +48,10 @@ const TopNav: React.FC = () => {
         ))}
       </Styled.Routes>
 
-      <Styled.Actions>
-        <Styled.Profile>
-          <Image
-            src="/avatar.png"
-            alt="Avatar of Toni Papperoni"
-            width={32}
-            height={32}
-          />
-        </Styled.Profile>
+      <Styled.Actions href="https://app.tryspace.com/login">
+        <IconLogout />
 
-        <p>{username}</p>
-
-        <Popover
-          options={[
-            {
-              icon: IconLogout,
-              label: 'Logout',
-              callback: logout
-            }
-          ]}
-          className="is-popover"
-        >
-          <Styled.IconAction />
-        </Popover>
+        <p>SIGN IN</p>
       </Styled.Actions>
 
       <Styled.Hamburger

@@ -40,13 +40,14 @@ const Routes = styled.ul`
   align-items: center;
 `
 
-const Actions = styled.div`
+const Actions = styled(Link)`
   height: 100%;
   display: flex;
   padding: 0 1.5rem;
   margin-left: auto;
   align-items: center;
   border-left: ${({ theme }) => `1px solid ${theme.colors.dark[200]}`};
+  text-decoration: none;
 
   p {
     ${({ theme }) => theme.fonts.size.sm};

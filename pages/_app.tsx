@@ -21,7 +21,7 @@ const Root = ({ Component, pageProps }: AppPropsWithLayout): JSX.Element => {
       <ThemeProvider>
         <GlobalStyles />
 
-        <Auth />
+        {/* <Auth /> */}
 
         <TopNav />
 

@@ -1,17 +1,14 @@
 import { useMemo, useState } from 'react'
 
 import { TextInput } from '@space-metaverse-ag/space-ui'
+import Card, { type StoreProps } from 'components/store'
 import useDebounce from 'hooks/useDebounce'
 import useFetch from 'hooks/useFetch'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import styled from 'styled-components'
 
-import type { RoomProps, ProductProps } from '../types'
-
-type GroupProductsByRoomProps = RoomProps & {
-  products: ProductProps[]
-}
+import type { ProductProps } from '../types'
 
 interface RequestSearchProductsProps {
   hits: ProductProps[]
@@ -25,6 +22,13 @@ const Page = styled.div`
   flex-direction: column;
 `
 
+const Products = styled.div`
+  gap: 1.5rem;
+  display: flex;
+  margin-top: 2rem;
+  flex-direction: column;
+`
+
 const App: NextPage = () => {
   const [search, setSearch] = useState('')
 
@@ -34,13 +38,13 @@ const App: NextPage = () => {
     data
   } = useFetch<RequestSearchProductsProps>('/search/products')
 
-  const groupByRoom = useMemo(() => {
+  const groupByStore = useMemo(() => {
     if (data) {
       const {
         hits
       } = data
 
-      const reduce = hits.reduce<Record<string, GroupProductsByRoomProps>>((acc, curr) => {
+      const reduce = hits.reduce<Record<string, StoreProps>>((acc, curr) => {
         acc[curr.room.hub_id] = {
           ...curr.room,
           ...(acc[curr.room.hub_id] || { products: [] })
@@ -70,6 +74,12 @@ const App: NextPage = () => {
         onChange={({ target }) => setSearch(target.value)}
         placeholder="Search for products or stores ..."
       />
+
+      <Products>
+        {groupByStore.map((store) => (
+          <Card key={store.hub_id} {...store} />
+        ))}
+      </Products>
     </Page>
   )
 }

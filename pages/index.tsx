@@ -1,10 +1,27 @@
-import { useState } from 'react'
-import { SearchBox } from 'react-instantsearch-hooks-web'
+import { useMemo, useState } from 'react'
+import { Hits, Pagination, HierarchicalMenu } from 'react-instantsearch-hooks-web'
 
 import { TextInput } from '@space-metaverse-ag/space-ui'
+import Autocomplete from 'components/Autocomplete'
+import Hit from 'components/Hit'
+import searchClient from 'helpers/algolia'
+import useDebounce from 'hooks/useDebounce'
+import useFetch from 'hooks/useFetch'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import styled from 'styled-components'
+
+import type { RoomProps, ProductProps } from '../types'
+
+type GroupProductsByRoomProps = RoomProps & {
+  products: ProductProps[]
+}
+
+interface RequestSearchProductsProps {
+  hits: ProductProps[]
+  page: number
+  params: string
+}
 
 const Page = styled.div`
   width: 100%;
@@ -14,6 +31,37 @@ const Page = styled.div`
 
 const App: NextPage = () => {
   const [search, setSearch] = useState('')
+
+  const debounce = useDebounce(search)
+
+  const {
+    data
+  } = useFetch<RequestSearchProductsProps>('/search/products')
+
+  const groupByRoom = useMemo(() => {
+    if (data) {
+      const {
+        hits
+      } = data
+
+      const reduce = hits.reduce<Record<string, GroupProductsByRoomProps>>((acc, curr) => {
+        acc[curr.room.hub_id] = {
+          ...curr.room,
+          ...(acc[curr.room.hub_id] || { products: [] })
+        }
+
+        acc[curr.room.hub_id].products.push(curr)
+
+        return acc
+      }, {})
+
+      return Object.values(reduce)
+    }
+
+    return []
+  }, [data])
+
+  console.log(groupByRoom)
 
   return (
     <Page>
@@ -26,10 +74,25 @@ const App: NextPage = () => {
         label=""
         value={search}
         onChange={({ target }) => setSearch(target.value)}
-        placeholder="Search"
+        placeholder="Search for products or stores ..."
       />
 
-      <SearchBox />
+      {/* <Autocomplete
+        placeholder="Search products"
+        detachedMediaQuery="none"
+        searchClient={searchClient}
+      />
+
+      <HierarchicalMenu
+        attributes={[
+          'hierarchicalCategories.lvl0',
+          'hierarchicalCategories.lvl1'
+        ]}
+      /> */}
+
+      {/* <Hits hitComponent={Hit} />
+
+      <Pagination /> */}
     </Page>
   )
 }

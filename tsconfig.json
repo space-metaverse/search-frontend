@@ -10,11 +10,20 @@
       "redux/*": [
         "./redux/*"
       ],
+      "hooks/*": [
+        "./hooks/*"
+      ],
       "pages/*": [
         "./pages/*"
       ],
+      "helpers/*": [
+        "./helpers/*"
+      ],
       "layouts/*": [
         "./layouts/*"
+      ],
+      "services/*": [
+        "./services/*"
       ],
       "components/*": [
         "./components/*"

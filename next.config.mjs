@@ -8,6 +8,7 @@ export default {
 
   experimental: {
     transpilePackages: [
+      '@algolia/autocomplete-shared',
       '@space-metaverse-ag/space-ui'
     ]
   },

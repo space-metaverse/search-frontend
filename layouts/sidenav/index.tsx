@@ -2,20 +2,14 @@ import { useRef, useState, useEffect } from 'react'
 
 import { useOutsideClick } from '@space-metaverse-ag/space-ui/hooks'
 import {
-  NFT,
-  User,
-  Wallet,
-  Avatar,
-  Friends,
-  Profile,
-  Security,
-  ArrowLeft,
-  Collection,
-  FriendsAdd,
-  FriendsList,
-  FriendsRequests,
-  ConnectedWallets,
-  ConnectNewWallet
+  Art,
+  Show,
+  Sport,
+  Meetup,
+  Retail,
+  Fashion,
+  Concert,
+  Influence
 } from '@space-metaverse-ag/space-ui/icons'
 import { useRouter } from 'next/router'
 
@@ -24,83 +18,52 @@ import type { OptionProps, SimpleOptionProps, OptionComponentProps } from './typ
 
 const options: OptionProps[] = [
   {
-    Icon: User,
-    label: 'Profile',
+    Icon: Art,
+    label: 'Art',
     route: null,
-    disabled: false,
-    children: [
-      {
-        Icon: Profile,
-        route: '/profile/information',
-        label: 'Profile Information',
-        disabled: false
-      },
-      {
-        Icon: Avatar,
-        route: '/profile/avatars',
-        label: 'Avatars',
-        disabled: true
-      },
-      {
-        Icon: Security,
-        route: '/profile/security',
-        label: 'Security Settings',
-        disabled: false
-      }
-    ]
+    disabled: false
   },
   {
-    Icon: Friends,
-    label: 'Friends',
+    Icon: Influence,
+    label: 'Influencer Rooms',
     route: null,
-    disabled: true,
-    children: [
-      {
-        Icon: FriendsList,
-        route: '/friends/your-friends',
-        label: 'Your Friends'
-      },
-      {
-        Icon: FriendsAdd,
-        route: '/friends/add-friend',
-        label: 'Add Friend'
-      },
-      {
-        Icon: FriendsRequests,
-        route: '/friends/manage',
-        label: 'Manage Requests'
-      }
-    ]
+    disabled: false
   },
   {
-    Icon: Wallet,
+    Icon: Fashion,
     route: null,
-    label: 'Connected Wallets',
-    disabled: false,
-    children: [
-      {
-        Icon: ConnectedWallets,
-        route: '/wallet',
-        label: 'Active Wallets'
-      },
-      {
-        Icon: ConnectNewWallet,
-        route: '/wallet/connect',
-        label: 'Connect New Wallet'
-      }
-    ]
+    label: 'Fashion',
+    disabled: false
   },
   {
-    Icon: NFT,
-    label: 'NFT Inventory',
-    route: '/nft-inventory',
-    disabled: true
+    Icon: Show,
+    route: null,
+    label: 'Shows',
+    disabled: false
   },
   {
-    Icon: Collection,
-    label: 'Space Inventory',
-    route: '/space-inventory',
-    disabled: true
+    Icon: Sport,
+    route: null,
+    label: 'Sports',
+    disabled: false
+  },
+  {
+    Icon: Meetup,
+    route: null,
+    label: 'Meetups',
+    disabled: false
+  },
+  {
+    Icon: Concert,
+    route: null,
+    label: 'Concerts',
+    disabled: false
+  },
+  {
+    Icon: Retail,
+    route: null,
+    label: 'Retail',
+    disabled: false
   }
 ]
 

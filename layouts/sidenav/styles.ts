@@ -85,7 +85,6 @@ export const Option = styled.div<OptionStylesProps>`
   }
 
   path {
-    stroke: ${({ theme, disabled }) => disabled ? theme.colors.dark['400'] : theme.colors.dark['800']};
     stroke-width: 2px;
   }
 

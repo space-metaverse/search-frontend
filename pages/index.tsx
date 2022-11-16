@@ -1,10 +1,6 @@
 import { useMemo, useState } from 'react'
-import { Hits, Pagination, HierarchicalMenu } from 'react-instantsearch-hooks-web'
 
 import { TextInput } from '@space-metaverse-ag/space-ui'
-import Autocomplete from 'components/Autocomplete'
-import Hit from 'components/Hit'
-import searchClient from 'helpers/algolia'
 import useDebounce from 'hooks/useDebounce'
 import useFetch from 'hooks/useFetch'
 import type { NextPage } from 'next'
@@ -61,8 +57,6 @@ const App: NextPage = () => {
     return []
   }, [data])
 
-  console.log(groupByRoom)
-
   return (
     <Page>
       <Head>
@@ -76,23 +70,6 @@ const App: NextPage = () => {
         onChange={({ target }) => setSearch(target.value)}
         placeholder="Search for products or stores ..."
       />
-
-      {/* <Autocomplete
-        placeholder="Search products"
-        detachedMediaQuery="none"
-        searchClient={searchClient}
-      />
-
-      <HierarchicalMenu
-        attributes={[
-          'hierarchicalCategories.lvl0',
-          'hierarchicalCategories.lvl1'
-        ]}
-      /> */}
-
-      {/* <Hits hitComponent={Hit} />
-
-      <Pagination /> */}
     </Page>
   )
 }

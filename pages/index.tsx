@@ -163,7 +163,7 @@ const App: NextPage = () => {
           </Empty>
         )}
 
-        {(!isFetching || !isLoading) && groupByStore.map((store) => (
+        {!isFetching && !isLoading && groupByStore.map((store) => (
           <Card key={store.hub_id} {...store} />
         ))}
       </Products>

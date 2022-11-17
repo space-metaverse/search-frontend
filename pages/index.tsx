@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 
 // import InfiniteScroll from 'react-infinite-scroller'
 import { TextInput } from '@space-metaverse-ag/space-ui'
+import { Products as IconProducts } from '@space-metaverse-ag/space-ui/icons'
 import { useProductsQuery } from 'api/search'
 import Spinner from 'components/Spinner'
 import Card, { type StoreProps } from 'components/store'
@@ -14,6 +15,34 @@ const Page = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
+`
+
+const Empty = styled.div`
+  width: 100%;
+  display: flex;
+  padding: 10rem 1.5rem;
+  align-items: center;
+  border-radius: ${({ theme }) => `${theme.radius.xl} 0 0 ${theme.radius.xl}`};
+  flex-direction: column;
+  justify-content: center;
+  background-color: ${({ theme }) => theme.colors.dark['100']};
+
+  h2 {
+    ${({ theme }) => theme.fonts.size.xl};
+    color: ${({ theme }) => theme.colors.dark['800']};
+    max-width: 18rem;
+    margin-top: 1rem;
+    text-align: center;
+    font-weight: ${({ theme }) => theme.fonts.weight.bold};
+  
+    b {
+      color: ${({ theme }) => theme.colors.blue['400']};
+    }
+  }
+
+  path {
+    stroke: ${({ theme }) => theme.colors.blue['400']};
+  }
 `
 
 const Title = styled.h2`
@@ -102,6 +131,16 @@ const App: NextPage = () => {
 
       <Products>
         {isLoading && <Spinner />}
+
+        {!isLoading && groupByStore.length <= 0 && (
+          <Empty>
+            <IconProducts width={40} height={40} />
+            <h2>
+              Sorry, we couldn&apos;t find any information for
+              <b> &apos;{debounce}&apos;</b>
+            </h2>
+          </Empty>
+        )}
 
         {!isLoading && groupByStore.map((store) => (
           <Card key={store.hub_id} {...store} />

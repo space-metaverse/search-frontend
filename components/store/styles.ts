@@ -13,6 +13,7 @@ const Image = styled.div`
   height: 100%;
   display: flex;
   min-width: 15rem;
+  max-width: 15rem;
   align-items: center;
   border-radius: ${({ theme }) => `${theme.radius.xl} 0 0 ${theme.radius.xl}`};
   justify-content: center;
@@ -96,6 +97,7 @@ const Wrapper = styled.div`
       ${Image} {
         height: 10rem;
         min-width: 100%;
+        max-width: 100%;
       }
     }
   }

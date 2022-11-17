@@ -1,8 +1,9 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 
 import { TextInput } from '@space-metaverse-ag/space-ui'
 import { Products as IconProducts } from '@space-metaverse-ag/space-ui/icons'
 import { useProductsQuery } from 'api/search'
+import Paginate from 'components/paginate'
 import Spinner from 'components/Spinner'
 import Card, { type StoreProps } from 'components/store'
 import useDebounce from 'hooks/useDebounce'
@@ -14,6 +15,10 @@ const Page = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
+
+  .paginate {
+    margin: 0 auto;
+  }
 `
 
 const Empty = styled.div`
@@ -58,9 +63,9 @@ const Title = styled.h2`
 
 const Products = styled.div`
   height: 100%;
+  margin: 1.5rem 0;
   display: flex;
   position: relative;
-  margin-top: 1.5rem;
   align-items: center;
   justify-content: center;
   gap: 1.5rem;
@@ -81,15 +86,23 @@ const Products = styled.div`
 `
 
 const App: NextPage = () => {
-  const [page, setPage] = useState(0)
+  const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
 
   const debounce = useDebounce(search)
 
   const {
     data,
-    isLoading
-  } = useProductsQuery({ page, search: debounce })
+    isLoading,
+    isFetching
+  } = useProductsQuery({
+    page: page - 1,
+    search: debounce
+  })
+
+  useEffect(() => {
+    if (debounce) setPage(1)
+  }, [debounce])
 
   const groupByStore = useMemo(() => {
     if (data) {
@@ -138,9 +151,9 @@ const App: NextPage = () => {
       )}
 
       <Products>
-        {isLoading && <Spinner />}
+        {(isFetching || isLoading) && <Spinner />}
 
-        {!isLoading && groupByStore.length <= 0 && (
+        {!isFetching && !isLoading && groupByStore.length <= 0 && (
           <Empty>
             <IconProducts width={40} height={40} />
             <h2>
@@ -150,10 +163,23 @@ const App: NextPage = () => {
           </Empty>
         )}
 
-        {!isLoading && groupByStore.map((store) => (
+        {(!isFetching || !isLoading) && groupByStore.map((store) => (
           <Card key={store.hub_id} {...store} />
         ))}
       </Products>
+
+      {data && !isFetching && !isLoading && (
+        <Paginate
+          onPage={(position) => {
+            setPage(position)
+
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+          }}
+          pageSize={data.hitsPerPage}
+          totalCount={data.nbHits}
+          currentPage={page}
+        />
+      )}
     </Page>
   )
 }

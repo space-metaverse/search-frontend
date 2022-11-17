@@ -34,7 +34,9 @@ interface ResponseSearchProductsProps {
   hits: ProductProps[]
   page: number
   params: string
+  nbHits: number
   nbPages: number
+  hitsPerPage: number
 }
 
 const getBaseURL = (): string => {

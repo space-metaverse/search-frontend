@@ -21,9 +21,9 @@ const Pagination: React.FC<PaginateProps> = ({
 
   if (paginationRange.length <= 1) return null
 
-  const onNext = (): void => onPage(currentPage + 1)
+  const onNext = (): void => onPage((prev) => prev + 1)
 
-  const onPrevious = (): void => onPage(currentPage - 1)
+  const onPrevious = (): void => onPage((prev) => prev - 1)
 
   const lastPage = paginationRange[paginationRange.length - 1]
 

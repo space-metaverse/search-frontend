@@ -1,4 +1,5 @@
 import { Card, Button } from '@space-metaverse-ag/space-ui'
+import { Image as IconImage } from '@space-metaverse-ag/space-ui/icons'
 import Link from 'next/link'
 
 import type { RoomProps, ProductProps } from '../../types'
@@ -17,6 +18,10 @@ const Store: React.FC<StoreProps> = ({
 }) => (
   <Styles.Wrapper>
     <Styles.Card>
+      <Styles.Image>
+        <IconImage width={40} height={40} />
+      </Styles.Image>
+
       <Styles.Content>
         <h3>{name}</h3>
 

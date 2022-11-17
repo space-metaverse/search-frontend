@@ -8,11 +8,19 @@ const Card = styled.div`
   align-items: center;
 `
 
-const Wrapper = styled.div`
-  gap: 1rem;
+const Image = styled.div`
   width: 100%;
+  height: 100%;
   display: flex;
-  flex-direction: column;
+  max-width: 15rem;
+  align-items: center;
+  border-radius: ${({ theme }) => `${theme.radius.xl} 0 0 ${theme.radius.xl}`};
+  justify-content: center;
+  background-color: ${({ theme }) => theme.colors.dark['100']};
+
+  path {
+    stroke: ${({ theme }) => theme.colors.blue['400']};
+  }
 `
 
 const Content = styled.div`
@@ -75,8 +83,39 @@ const Products = styled.div`
   grid-template-columns: repeat(3, 1fr);
 `
 
+const Wrapper = styled.div`
+  gap: 1rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  @media screen and (max-width: 1024px) {
+    ${Card} {
+      flex-direction: column;
+
+      ${Image} {
+        height: 10rem;
+        max-width: 100%;
+      }
+    }
+  }
+
+  @media screen and (max-width: 720px) {
+    ${Products} {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media screen and (max-width: 524px) {
+    ${Products} {
+      grid-template-columns: repeat(1, 1fr);
+    }
+  }
+`
+
 export default {
   Card,
+  Image,
   Product,
   Wrapper,
   Content,

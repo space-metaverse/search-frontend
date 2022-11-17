@@ -1,23 +1,14 @@
 import { useMemo, useState } from 'react'
-// import InfiniteScroll from 'react-infinite-scroller'
 
+// import InfiniteScroll from 'react-infinite-scroller'
 import { TextInput } from '@space-metaverse-ag/space-ui'
+import { useProductsQuery } from 'api/search'
 import Spinner from 'components/Spinner'
 import Card, { type StoreProps } from 'components/store'
 import useDebounce from 'hooks/useDebounce'
-import useFetch from 'hooks/useFetch'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import styled from 'styled-components'
-
-import type { ProductProps } from '../types'
-
-interface RequestSearchProductsProps {
-  hits: ProductProps[]
-  page: number
-  params: string
-  nbPages: number
-}
 
 const Page = styled.div`
   width: 100%;
@@ -60,8 +51,8 @@ const App: NextPage = () => {
 
   const {
     data,
-    loading
-  } = useFetch<RequestSearchProductsProps>(`/search/products${debounce ? `?search=${debounce}` : ''}`)
+    isLoading
+  } = useProductsQuery({ search: debounce })
 
   const groupByStore = useMemo(() => {
     if (data) {
@@ -110,9 +101,9 @@ const App: NextPage = () => {
       )}
 
       <Products>
-        {loading && <Spinner />}
+        {isLoading && <Spinner />}
 
-        {!loading && groupByStore.map((store) => (
+        {!isLoading && groupByStore.map((store) => (
           <Card key={store.hub_id} {...store} />
         ))}
       </Products>

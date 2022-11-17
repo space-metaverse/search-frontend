@@ -1,7 +1,6 @@
 import { Provider } from 'react-redux'
 
 import { ThemeProvider, GlobalStyles } from '@space-metaverse-ag/space-ui'
-import Auth from 'components/Auth'
 import TopNav from 'layouts/topnav'
 import Layout from 'layouts/wrapper'
 import type { AppProps } from 'next/app'
@@ -20,8 +19,6 @@ const Root = ({ Component, pageProps }: AppPropsWithLayout): JSX.Element => {
     <Provider store={store}>
       <ThemeProvider>
         <GlobalStyles />
-
-        {/* <Auth /> */}
 
         <TopNav />
 

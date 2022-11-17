@@ -1,11 +1,11 @@
 import { Card, Button } from '@space-metaverse-ag/space-ui'
 import { Image as IconImage } from '@space-metaverse-ag/space-ui/icons'
+import type { RoomProps, ProductProps } from 'api/search'
 import Link from 'next/link'
 
-import type { RoomProps, ProductProps } from '../../types'
 import Styles from './styles'
 
-export type StoreProps = RoomProps & {
+export interface StoreProps extends RoomProps {
   products: ProductProps[]
 }
 
@@ -30,7 +30,7 @@ const Store: React.FC<StoreProps> = ({
         <p>{description}</p>
 
         <Link
-          href={`https://app.tryspace.com/${hubSlug}`}
+          href={`https://app.tryspace.com/${hubSlug as string}`}
           target="_blank"
         >
           <Button
@@ -53,7 +53,7 @@ const Store: React.FC<StoreProps> = ({
         }) => (
           <Styles.Product
             key={objectID}
-            href={`https://app.tryspace.com/${hubSlug}/product/${objectID}`}
+            href={`https://app.tryspace.com/${hubSlug as string}/product/${objectID as string}`}
             target="_blank"
           >
             <Card image={thumbnailUrl}>

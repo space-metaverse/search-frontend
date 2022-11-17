@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react'
 
-// import InfiniteScroll from 'react-infinite-scroller'
 import { TextInput } from '@space-metaverse-ag/space-ui'
 import { Products as IconProducts } from '@space-metaverse-ag/space-ui/icons'
 import { useProductsQuery } from 'api/search'
@@ -58,22 +57,31 @@ const Title = styled.h2`
 `
 
 const Products = styled.div`
-  gap: 1.5rem;
   height: 100%;
   display: flex;
   position: relative;
   margin-top: 1.5rem;
   align-items: center;
-  flex-direction: column;
   justify-content: center;
+  gap: 1.5rem;
+  width: 100%;
+  flex-direction: column;
 
   .spinner {
     margin: 2rem 0;
   }
+
+  .is-scroll-view {
+    gap: 1.5rem;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
 `
 
 const App: NextPage = () => {
-  // const [size, setSize] = useState(0)
+  const [page, setPage] = useState(0)
   const [search, setSearch] = useState('')
 
   const debounce = useDebounce(search)
@@ -81,7 +89,7 @@ const App: NextPage = () => {
   const {
     data,
     isLoading
-  } = useProductsQuery({ search: debounce })
+  } = useProductsQuery({ page, search: debounce })
 
   const groupByStore = useMemo(() => {
     if (data) {

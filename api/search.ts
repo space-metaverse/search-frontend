@@ -26,6 +26,7 @@ export interface ProductProps {
 }
 
 interface RequestSearchProductsProps {
+  page: number
   search: string
 }
 
@@ -54,8 +55,8 @@ export const searchApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: getBaseURL() }),
   endpoints: (builder) => ({
     products: builder.query<ResponseSearchProductsProps, RequestSearchProductsProps>({
-      query: ({ search }) => ({
-        url: `/search/products${search ? `?search=${search}` : ''}`,
+      query: ({ page, search }) => ({
+        url: `/search/products?page=${page}${search ? `&search=${search}` : ''}`,
         method: 'GET'
       })
     })

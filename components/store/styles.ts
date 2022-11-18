@@ -12,8 +12,8 @@ const Image = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  min-width: 15rem;
-  max-width: 15rem;
+  min-width: 24rem;
+  max-width: 24rem;
   align-items: center;
   border-radius: ${({ theme }) => `${theme.radius.xl} 0 0 ${theme.radius.xl}`};
   justify-content: center;

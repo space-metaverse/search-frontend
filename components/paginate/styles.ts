@@ -5,7 +5,9 @@ import type { BulletProps } from './types'
 const List = styled.div`
   gap: .5rem;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
 `
 
 const Bullet = styled.button.attrs({

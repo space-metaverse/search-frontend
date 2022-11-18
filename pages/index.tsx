@@ -18,7 +18,7 @@ const Page = styled.div`
   flex-direction: column;
 
   .paginate {
-    margin: 0 auto;
+    margin: 1.5rem auto;
   }
 `
 

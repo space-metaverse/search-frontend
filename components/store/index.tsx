@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 import { Card, Button } from '@space-metaverse-ag/space-ui'
 import { Image as IconImage } from '@space-metaverse-ag/space-ui/icons'
 import type { RoomProps, ProductProps } from 'api/search'
@@ -16,9 +18,13 @@ const Store: React.FC<StoreProps> = ({
   products,
   description
 }) => {
+  const [more, setMore] = useState(false)
+
   const filterProductsThatHaveAnImage = products.filter((product) => product.thumbnail_url)
 
   const removeDuplicateProducts = [...new Map(filterProductsThatHaveAnImage.map(item => [item.name, item])).values()]
+
+  const numberOfProducts = more ? removeDuplicateProducts.length + 1 : 6
 
   return (
     <Styles.Wrapper>
@@ -49,7 +55,7 @@ const Store: React.FC<StoreProps> = ({
 
       {removeDuplicateProducts.length > 0 && (
         <Styles.Products>
-          {removeDuplicateProducts.map(({
+          {removeDuplicateProducts.slice(0, numberOfProducts).map(({
             name,
             price,
             currency,
@@ -72,6 +78,16 @@ const Store: React.FC<StoreProps> = ({
             </Styles.Product>
           ))}
         </Styles.Products>
+      )}
+
+      {removeDuplicateProducts.length > 6 && (
+        <Button
+          size="medium"
+          color="grey"
+          label={more ? 'Less results' : 'More results'}
+          outline
+          onClick={() => setMore((prev) => !prev)}
+        />
       )}
     </Styles.Wrapper>
   )

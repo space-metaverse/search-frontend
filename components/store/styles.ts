@@ -90,6 +90,11 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
 
+  > button {
+    width: fit-content;
+    margin: 0 auto;
+  }
+
   @media screen and (max-width: 1024px) {
     ${Card} {
       flex-direction: column;

@@ -15,60 +15,66 @@ const Store: React.FC<StoreProps> = ({
   hub_slug: hubSlug,
   products,
   description
-}) => (
-  <Styles.Wrapper>
-    <Styles.Card>
-      <Styles.Image>
-        <IconImage width={40} height={40} />
-      </Styles.Image>
+}) => {
+  const filterProductsThatHaveAnImage = products.filter((product) => product.thumbnail_url)
 
-      <Styles.Content>
-        <h3>{name}</h3>
+  const removeDuplicateProducts = [...new Map(filterProductsThatHaveAnImage.map(item => [item.name, item])).values()]
 
-        <span>By {author.name}</span>
+  return (
+    <Styles.Wrapper>
+      <Styles.Card>
+        <Styles.Image>
+          <IconImage width={40} height={40} />
+        </Styles.Image>
 
-        <p>{description}</p>
+        <Styles.Content>
+          <h3>{name}</h3>
 
-        <Link
-          href={`https://app.tryspace.com/${hubSlug as string}`}
-          target="_blank"
-        >
-          <Button
-            size="medium"
-            color="blue"
-            label="ENTER STORE"
-          />
-        </Link>
-      </Styles.Content>
-    </Styles.Card>
+          <span>By {author.name}</span>
 
-    {products.length > 0 && (
-      <Styles.Products>
-        {products.map(({
-          name,
-          price,
-          currency,
-          objectID,
-          thumbnail_url: thumbnailUrl
-        }) => (
-          <Styles.Product
-            key={objectID}
-            href={`https://app.tryspace.com/${hubSlug as string}/product/${objectID as string}`}
+          <p>{description}</p>
+
+          <Link
+            href={`https://app.tryspace.com/${hubSlug}`}
             target="_blank"
           >
-            <Card image={thumbnailUrl}>
-              <h2>{name}</h2>
-              <span>
-                {price
-                  ? new Intl.NumberFormat('en-US', { style: 'currency', currency: currency ?? 'USD' }).format(price)
-                  : '-'}
-              </span>
-            </Card>
-          </Styles.Product>
-        ))}
-      </Styles.Products>
-    )}
-  </Styles.Wrapper>
-)
+            <Button
+              size="medium"
+              color="blue"
+              label="ENTER STORE"
+            />
+          </Link>
+        </Styles.Content>
+      </Styles.Card>
+
+      {removeDuplicateProducts.length > 0 && (
+        <Styles.Products>
+          {removeDuplicateProducts.map(({
+            name,
+            price,
+            currency,
+            objectID,
+            thumbnail_url: thumbnailUrl
+          }) => (
+            <Styles.Product
+              key={objectID}
+              href={`https://app.tryspace.com/${hubSlug}/product/${objectID}`}
+              target="_blank"
+            >
+              <Card image={thumbnailUrl}>
+                <h2>{name}</h2>
+                <span>
+                  {price
+                    ? new Intl.NumberFormat('en-US', { style: 'currency', currency: currency ?? 'USD' }).format(price)
+                    : '-'}
+                </span>
+              </Card>
+            </Styles.Product>
+          ))}
+        </Styles.Products>
+      )}
+    </Styles.Wrapper>
+  )
+}
 
 export default Store

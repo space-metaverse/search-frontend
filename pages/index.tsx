@@ -9,6 +9,7 @@ import Card, { type StoreProps } from 'components/store'
 import useDebounce from 'hooks/useDebounce'
 import type { NextPage } from 'next'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 import styled from 'styled-components'
 
 const Page = styled.div`
@@ -92,6 +93,10 @@ const App: NextPage = () => {
   const debounce = useDebounce(search)
 
   const {
+    query
+  } = useRouter()
+
+  const {
     data,
     isLoading,
     isFetching
@@ -99,6 +104,10 @@ const App: NextPage = () => {
     page: page - 1,
     search: debounce
   })
+
+  useEffect(() => {
+    if (query.keyword) setSearch(query.keyword as string)
+  }, [query])
 
   useEffect(() => {
     if (debounce) setPage(1)

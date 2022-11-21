@@ -2,9 +2,8 @@ import '@space-metaverse-ag/space-ui/index.css'
 
 import { Provider } from 'react-redux'
 
-import { ThemeProvider, GlobalStyles } from '@space-metaverse-ag/space-ui'
-import TopNav from 'layouts/topnav'
-import Layout from 'layouts/wrapper'
+import { TopNav, ThemeProvider, GlobalStyles } from '@space-metaverse-ag/space-ui'
+import Layout from 'components/layout'
 import type { AppProps } from 'next/app'
 import { store } from 'redux/store'
 
@@ -14,6 +13,15 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout
 }
 
+const routes = [
+  {
+    route: 'https://app.tryspace.com/faq',
+    label: 'faq',
+    disabled: false,
+    isExternal: true
+  }
+]
+
 const Root = ({ Component, pageProps }: AppPropsWithLayout): JSX.Element => {
   const layout = Component.getLayout ?? ((page) => page)
 
@@ -22,7 +30,10 @@ const Root = ({ Component, pageProps }: AppPropsWithLayout): JSX.Element => {
       <ThemeProvider>
         <GlobalStyles />
 
-        <TopNav />
+        <TopNav
+          routes={routes}
+          signInRoute="https://app.tryspace.com/login"
+        />
 
         <Layout>
           {layout(<Component {...pageProps} />)}

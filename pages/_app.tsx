@@ -1,3 +1,5 @@
+import '@space-metaverse-ag/space-ui/index.css'
+
 import { Provider } from 'react-redux'
 
 import { ThemeProvider, GlobalStyles } from '@space-metaverse-ag/space-ui'

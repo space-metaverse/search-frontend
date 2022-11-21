@@ -68,7 +68,10 @@ const options: SideNavProps['routes'] = [
 
 const Layout: NextPage<PropsWithChildren> = ({ children }) => (
   <Styled.Wrapper>
-    <SideNav routes={options} />
+    <SideNav
+      title="Categories"
+      routes={options}
+    />
 
     <Styled.Content>
       {children}

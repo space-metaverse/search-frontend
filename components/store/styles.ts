@@ -48,6 +48,13 @@ const Content = styled.div`
     margin-top: .25rem;
     font-family: ${({ theme }) => theme.fonts.family.body};
   }
+
+  > div {
+    gap: .5rem;
+    display: flex;
+    margin-top: .75rem;
+    align-items: center;
+  }
 `
 
 const Product = styled.div`

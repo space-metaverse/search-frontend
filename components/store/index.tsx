@@ -14,6 +14,7 @@ export interface StoreProps extends RoomProps {
 const Store: React.FC<StoreProps> = ({
   name,
   author,
+  hub_sid: hubSid,
   hub_slug: hubSlug,
   products,
   description
@@ -41,7 +42,7 @@ const Store: React.FC<StoreProps> = ({
           <p>{description}</p>
 
           <Link
-            href={`https://app.tryspace.com/${hubSlug}`}
+            href={`https://app.tryspace.com/${hubSid}/${hubSlug}`}
             target="_blank"
           >
             <Button
@@ -62,11 +63,7 @@ const Store: React.FC<StoreProps> = ({
             objectID,
             thumbnail_url: thumbnailUrl
           }) => (
-            <Styles.Product
-              key={objectID}
-              href={`https://app.tryspace.com/${hubSlug}/product/${objectID}`}
-              target="_blank"
-            >
+            <Styles.Product key={objectID}>
               <Card image={thumbnailUrl}>
                 <h2>{name}</h2>
                 <span>

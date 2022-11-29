@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import styled from 'styled-components'
 
 const Card = styled.div`
@@ -51,9 +50,13 @@ const Content = styled.div`
   }
 `
 
-const Product = styled(Link)`
+const Product = styled.div`
   color: inherit;
   text-decoration: none;
+
+  > div {
+    cursor: inherit;
+  }
 
   h2 {
     ${({ theme }) => theme.fonts.size.md};

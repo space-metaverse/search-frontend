@@ -7,6 +7,7 @@ export interface RoomProps {
   author: {
     name: string
   }
+  hub_sid: string
   hub_slug: string
   description: string | null
   commerce_type: string

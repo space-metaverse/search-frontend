@@ -54,6 +54,10 @@ const Product = styled.div`
   color: inherit;
   text-decoration: none;
 
+  > div {
+    cursor: inherit;
+  }
+
   h2 {
     ${({ theme }) => theme.fonts.size.md};
     color: ${({ theme }) => theme.colors.dark['800']};

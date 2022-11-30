@@ -1,9 +1,8 @@
 import { useMemo, useState, useEffect } from 'react'
 
-import { TextInput } from '@space-metaverse-ag/space-ui'
+import { TextInput, Pagination } from '@space-metaverse-ag/space-ui'
 import { Products as IconProducts } from '@space-metaverse-ag/space-ui/icons'
 import { useProductsQuery } from 'api/search'
-import Paginate from 'components/paginate'
 import Spinner from 'components/Spinner'
 import Card, { type StoreProps } from 'components/store'
 import useDebounce from 'hooks/useDebounce'
@@ -178,7 +177,7 @@ const App: NextPage = () => {
       </Products>
 
       {data && !isFetching && !isLoading && (
-        <Paginate
+        <Pagination
           onPage={(position) => {
             setPage(position)
 

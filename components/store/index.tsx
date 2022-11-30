@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { Card, Button } from '@space-metaverse-ag/space-ui'
+import { Card, Chip, Button } from '@space-metaverse-ag/space-ui'
 import { Image as IconImage } from '@space-metaverse-ag/space-ui/icons'
 import type { RoomProps, ProductProps } from 'api/search'
 import Link from 'next/link'
@@ -17,6 +17,7 @@ const Store: React.FC<StoreProps> = ({
   hub_sid: hubSid,
   hub_slug: hubSlug,
   products,
+  categories,
   description
 }) => {
   const [more, setMore] = useState(false)
@@ -38,6 +39,18 @@ const Store: React.FC<StoreProps> = ({
           <h3>{name}</h3>
 
           <span>By {author.name}</span>
+
+          {categories.length > 0 && (
+            <div>
+              {categories.map((category) => (
+                <Chip
+                  key={category}
+                  label={category}
+                  color="grey"
+                />
+              ))}
+            </div>
+          )}
 
           <p>{description}</p>
 

@@ -47,6 +47,8 @@ const getBaseURL = (): string => {
       return 'https://api.dev.tryspace.com'
     case 'dev':
       return 'https://api.dev.tryspace.com'
+    case 'qa':
+      return 'https://api.qa.tryspace.com'
     case 'prod':
       return 'https://api.tryspace.com'
     default:

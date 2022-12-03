@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import styled from 'styled-components'
 
 const Card = styled.div`
@@ -57,7 +58,7 @@ const Content = styled.div`
   }
 `
 
-const Product = styled.div`
+const Product = styled(Link)`
   color: inherit;
   text-decoration: none;
 

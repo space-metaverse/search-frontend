@@ -76,7 +76,11 @@ const Store: React.FC<StoreProps> = ({
             objectID,
             thumbnail_url: thumbnailUrl
           }) => (
-            <Styles.Product key={objectID}>
+            <Styles.Product
+              key={objectID}
+              href={`https://app.tryspace.com/${hubSid}/${hubSlug}`}
+              target="_blank"
+            >
               <Card image={thumbnailUrl}>
                 <h2>{name}</h2>
                 <span>

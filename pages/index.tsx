@@ -1,9 +1,8 @@
 import { useMemo, useState, useEffect } from 'react'
 
-import { TextInput, Pagination } from '@space-metaverse-ag/space-ui'
+import { Spinner, TextInput, Pagination } from '@space-metaverse-ag/space-ui'
 import { Products as IconProducts } from '@space-metaverse-ag/space-ui/icons'
 import { useProductsQuery } from 'api/search'
-import Spinner from 'components/Spinner'
 import Card, { type StoreProps } from 'components/store'
 import useDebounce from 'hooks/useDebounce'
 import type { NextPage } from 'next'
@@ -105,7 +104,7 @@ const App: NextPage = () => {
   })
 
   useEffect(() => {
-    if (query.keyword) setSearch(query.keyword as string)
+    if (query.q ?? query.keyword) setSearch((query.q ?? query.keyword) as string)
   }, [query])
 
   useEffect(() => {

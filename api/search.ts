@@ -44,7 +44,7 @@ interface ResponseSearchProductsProps {
 const getBaseURL = (): string => {
   switch (process.env.NEXT_PUBLIC_ENV) {
     case 'local':
-      return 'https://api.dev.tryspace.com'
+      return 'http://localhost:3001'
     case 'dev':
       return 'https://api.dev.tryspace.com'
     case 'qa':

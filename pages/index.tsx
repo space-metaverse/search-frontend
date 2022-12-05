@@ -105,7 +105,7 @@ const App: NextPage = () => {
   })
 
   useEffect(() => {
-    if (query.keyword) setSearch(query.keyword as string)
+    if (query.q ?? query.keyword) setSearch((query.q ?? query.keyword) as string)
   }, [query])
 
   useEffect(() => {

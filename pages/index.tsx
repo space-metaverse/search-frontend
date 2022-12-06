@@ -2,10 +2,11 @@ import { useMemo, useState, useEffect } from 'react'
 
 import { Spinner, TextInput, Pagination } from '@space-metaverse-ag/space-ui'
 import { Products as IconProducts } from '@space-metaverse-ag/space-ui/icons'
-import { useProductsQuery } from 'api/search'
+import { getBaseURL, type FacetsProps, useProductsQuery } from 'api/search'
+import axios from 'axios'
 import Card, { type StoreProps } from 'components/store'
 import useDebounce from 'hooks/useDebounce'
-import type { NextPage } from 'next'
+import { type NextPage, type GetStaticProps, InferGetStaticPropsType } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
@@ -84,7 +85,9 @@ const Products = styled.div`
   }
 `
 
-const App: NextPage = () => {
+const App: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
+  facets
+}) => {
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
 
@@ -133,6 +136,8 @@ const App: NextPage = () => {
 
     return []
   }, [data])
+
+  console.log(facets)
 
   return (
     <Page>
@@ -189,6 +194,24 @@ const App: NextPage = () => {
       )}
     </Page>
   )
+}
+
+export const getStaticProps: GetStaticProps<{ facets: FacetsProps }> = async () => {
+  const baseUrl = getBaseURL()
+
+  const res = await axios.get(`${baseUrl}/search/facets`)
+
+  const facets: FacetsProps = await res.data
+
+  console.log(facets)
+
+  return {
+    props: {
+      facets
+    },
+
+    revalidate: 60 * 60 * 24 // 24h
+  }
 }
 
 export default App

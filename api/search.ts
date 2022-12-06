@@ -1,5 +1,14 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
+export enum CategoryProps {
+  'art',
+  'concerts',
+  'meetups',
+  'retail',
+  'shows',
+  'sports'
+}
+
 export interface RoomProps {
   name: string
   stars: number
@@ -26,7 +35,7 @@ export interface FacetsProps {
     phygital: number
     physical: number
   }
-  'room.categories': Record<string, number>
+  'room.categories': Record<CategoryProps, number>
   'room.author.name': Record<string, number>
 }
 

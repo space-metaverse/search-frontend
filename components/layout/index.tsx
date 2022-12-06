@@ -1,82 +1,103 @@
-import type { PropsWithChildren } from 'react'
+import {
+  useMemo,
+  type Dispatch,
+  type SetStateAction,
+  type PropsWithChildren
+} from 'react'
 
 import { SideNav, type SideNavProps } from '@space-metaverse-ag/space-ui'
 import {
   Art,
   Show,
   Sport,
+  Space,
   Meetup,
   Retail,
   Fashion,
   Concert,
   Influence
 } from '@space-metaverse-ag/space-ui/icons'
+import { type FacetsProps } from 'api/search'
 import type { NextPage } from 'next'
 
 import Styled from './styles'
 
-const options: SideNavProps['routes'] = [
+const options = [
   {
     Icon: Art,
-    label: 'Art',
-    route: null,
-    disabled: false
+    label: 'Art'
   },
   {
     Icon: Influence,
-    label: 'Influencer Rooms',
-    route: null,
-    disabled: false
+    label: 'Influencer Rooms'
   },
   {
     Icon: Fashion,
-    route: null,
-    label: 'Fashion',
-    disabled: false
+    label: 'Fashion'
   },
   {
     Icon: Show,
-    route: null,
-    label: 'Shows',
-    disabled: false
+    label: 'Shows'
   },
   {
     Icon: Sport,
-    route: null,
-    label: 'Sports',
-    disabled: false
+    label: 'Sports'
   },
   {
     Icon: Meetup,
-    route: null,
-    label: 'Meetups',
-    disabled: false
+    label: 'Meetups'
   },
   {
     Icon: Concert,
-    route: null,
-    label: 'Concerts',
-    disabled: false
+    label: 'Concerts'
   },
   {
     Icon: Retail,
-    route: null,
-    label: 'Retail',
-    disabled: false
+    label: 'Retail'
   }
 ]
 
-const Layout: NextPage<PropsWithChildren> = ({ children }) => (
-  <Styled.Wrapper>
-    <SideNav
-      title="Categories"
-      routes={options}
-    />
+interface LayoutProps {
+  categories: FacetsProps['room.categories']
+  onCategory: Dispatch<SetStateAction<string | null>>
+}
 
-    <Styled.Content>
-      {children}
-    </Styled.Content>
-  </Styled.Wrapper>
-)
+const Layout: NextPage<PropsWithChildren<LayoutProps>> = ({
+  children,
+  categories,
+  onCategory
+}) => {
+  const onNavigate = (route: string): void => onCategory((prev) => prev !== route ? route : null)
+
+  const filterCategories: SideNavProps['routes'] = useMemo(() => {
+    const filterByQuantity = Object.entries(categories).filter(([_, value]) => value > 0)
+
+    return filterByQuantity.map(([key, value]) => {
+      const findOption = options.find(({ label }) => label.toLowerCase().includes(key))
+
+      return ({
+        key,
+        Icon: findOption?.Icon ?? Space,
+        label: `${key} (${value})`,
+        route: key,
+        disabled: false
+      })
+    })
+  }, [categories])
+
+  return (
+    <Styled.Wrapper>
+      <SideNav
+        title="Categories"
+        routes={filterCategories}
+        onNavigate={onNavigate}
+      />
+
+      <Styled.Content>
+        {children}
+      </Styled.Content>
+    </Styled.Wrapper>
+  )
+}
 
 export default Layout

@@ -4,6 +4,7 @@ import { Spinner, TextInput, Pagination } from '@space-metaverse-ag/space-ui'
 import { Products as IconProducts } from '@space-metaverse-ag/space-ui/icons'
 import { getBaseURL, type FacetsProps, useProductsQuery } from 'api/search'
 import axios from 'axios'
+import Layout from 'components/layout'
 import Card, { type StoreProps } from 'components/store'
 import useDebounce from 'hooks/useDebounce'
 import { type NextPage, type GetStaticProps, InferGetStaticPropsType } from 'next'
@@ -90,6 +91,7 @@ const App: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
 }) => {
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
+  const [category, setCategory] = useState<string | null>(null)
 
   const debounce = useDebounce(search)
 
@@ -103,11 +105,14 @@ const App: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     isFetching
   } = useProductsQuery({
     page: page - 1,
-    search: debounce
+    search: debounce,
+    category
   })
 
   useEffect(() => {
     if (query.q ?? query.keyword) setSearch((query.q ?? query.keyword) as string)
+
+    if (query.category) setCategory(query.category as string)
   }, [query])
 
   useEffect(() => {
@@ -137,62 +142,65 @@ const App: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     return []
   }, [data])
 
-  console.log(facets)
-
   return (
-    <Page>
+    <Layout
+      categories={facets['room.categories']}
+      onCategory={setCategory}
+    >
       <Head>
         <title>Search | SPACE</title>
         <meta name='description' content='SPACE Accounts' />
       </Head>
 
-      <TextInput
-        label=""
-        value={search}
-        onChange={({ target }) => setSearch(target.value)}
-        placeholder="Search for products or stores ..."
-      />
+      <Page>
+        <TextInput
+          label=""
+          value={search}
+          onChange={({ target }) => setSearch(target.value)}
+          placeholder="Search for products or stores ..."
+        />
 
-      {debounce && groupByStore.length > 0 && (
-        <Title>
-          Search Results:
-          <b>
-            {groupByStore.length} store{groupByStore.length > 1 ? 's' : ''}
-          </b>
-        </Title>
-      )}
-
-      <Products>
-        {(isFetching || isLoading) && <Spinner />}
-
-        {!isFetching && !isLoading && groupByStore.length <= 0 && (
-          <Empty>
-            <IconProducts width={40} height={40} />
-            <h2>
-              Sorry, we couldn&apos;t find any information for
-              <b> &apos;{debounce}&apos;</b>
-            </h2>
-          </Empty>
+        {debounce && groupByStore.length > 0 && (
+          <Title>
+            Search Results:
+            <b>
+              {groupByStore.length} store{groupByStore.length > 1 ? 's' : ''}
+            </b>
+          </Title>
         )}
 
-        {!isFetching && !isLoading && groupByStore.map((store) => (
-          <Card key={store.hub_id} {...store} />
-        ))}
-      </Products>
+        <Products>
+          {(isFetching || isLoading) && <Spinner />}
 
-      {data && !isFetching && !isLoading && (
-        <Pagination
-          onPage={(position) => {
-            setPage(position)
+          {!isFetching && !isLoading && groupByStore.length <= 0 && (
+            <Empty>
+              <IconProducts width={40} height={40} />
+              <h2>
+                Sorry, we couldn&apos;t find any information for
+                <b> &apos;{debounce}&apos;</b>
+              </h2>
+            </Empty>
+          )}
 
-            window.scrollTo({ top: 0, behavior: 'smooth' })
-          }}
-          pageSize={data.hitsPerPage}
-          totalCount={data.nbHits}
-          currentPage={page}
-        />
-      )}
-    </Page>
+          {!isFetching && !isLoading && groupByStore.map((store) => (
+            <Card key={store.hub_id} {...store} />
+          ))}
+        </Products>
+
+        {data && !isFetching && !isLoading && (
+          <Pagination
+            onPage={(position) => {
+              setPage(position)
+
+              window.scrollTo({ top: 0, behavior: 'smooth' })
+            }}
+            pageSize={data.hitsPerPage}
+            totalCount={data.nbHits}
+            currentPage={page}
+          />
+        )}
+      </Page>
+    </Layout>
   )
 }
 
@@ -202,8 +210,6 @@ export const getStaticProps: GetStaticProps<{ facets: FacetsProps }> = async () 
   const res = await axios.get(`${baseUrl}/search/facets`)
 
   const facets: FacetsProps = await res.data
-
-  console.log(facets)
 
   return {
     props: {

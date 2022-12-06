@@ -14,6 +14,22 @@ export interface RoomProps {
   commerce_type: string
 }
 
+export interface FacetsProps {
+  price: Record<string, number>
+  quantity: {
+    true: number
+    false: number
+  }
+  'room.stars': Record<string, number>
+  product_type: {
+    digital: number
+    phygital: number
+    physical: number
+  }
+  'room.categories': Record<string, number>
+  'room.author.name': Record<string, number>
+}
+
 export interface ProductProps {
   name: string
   room: RoomProps
@@ -41,7 +57,7 @@ interface ResponseSearchProductsProps {
   hitsPerPage: number
 }
 
-const getBaseURL = (): string => {
+export const getBaseURL = (): string => {
   switch (process.env.NEXT_PUBLIC_ENV) {
     case 'local':
       return 'http://localhost:3001'

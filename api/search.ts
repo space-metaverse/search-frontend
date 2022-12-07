@@ -1,5 +1,14 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
+export enum CategoryProps {
+  'art',
+  'concerts',
+  'meetups',
+  'retail',
+  'shows',
+  'sports'
+}
+
 export interface RoomProps {
   name: string
   stars: number
@@ -12,6 +21,22 @@ export interface RoomProps {
   categories: string[]
   description: string | null
   commerce_type: string
+}
+
+export interface FacetsProps {
+  price: Record<string, number>
+  quantity: {
+    true: number
+    false: number
+  }
+  'room.stars': Record<string, number>
+  product_type: {
+    digital: number
+    phygital: number
+    physical: number
+  }
+  'room.categories': Record<CategoryProps, number>
+  'room.author.name': Record<string, number>
 }
 
 export interface ProductProps {
@@ -30,6 +55,7 @@ export interface ProductProps {
 interface RequestSearchProductsProps {
   page: number
   search: string
+  category: string | null
 }
 
 interface ResponseSearchProductsProps {
@@ -41,7 +67,7 @@ interface ResponseSearchProductsProps {
   hitsPerPage: number
 }
 
-const getBaseURL = (): string => {
+export const getBaseURL = (): string => {
   switch (process.env.NEXT_PUBLIC_ENV) {
     case 'local':
       return 'http://localhost:3001'
@@ -61,8 +87,8 @@ export const searchApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: getBaseURL() }),
   endpoints: (builder) => ({
     products: builder.query<ResponseSearchProductsProps, RequestSearchProductsProps>({
-      query: ({ page, search }) => ({
-        url: `/search/products?page=${page}${search ? `&search=${search}` : ''}`,
+      query: ({ page, search, category }) => ({
+        url: `/search/products?page=${page}${search ? `&search=${search}` : ''}${category ? `&room_categories=${category}` : ''}`,
         method: 'GET'
       })
     })

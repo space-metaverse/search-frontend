@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.1",
+    "@segment/snippet": "^4.15.3",
     "@space-metaverse-ag/space-ui": "^1.2.0",
     "axios": "^1.2.1",
     "next": "^13.0.6",

@@ -25,7 +25,10 @@ const routes = [
 
 const analytics = (): string => {
   const options = {
-    page: true,
+    page: {
+      name: 'Search',
+      category: 'Space'
+    },
     apiKey: process.env.NEXT_PUBLIC_SEGMENT_WRITE_KEY
   }
 

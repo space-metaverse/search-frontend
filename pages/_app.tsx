@@ -3,7 +3,7 @@ import '@space-metaverse-ag/space-ui/index.css'
 import { Provider } from 'react-redux'
 
 import * as snippet from '@segment/snippet'
-import { TopNav, ThemeProvider, GlobalStyles } from '@space-metaverse-ag/space-ui'
+import { TopNav, ThemeProvider } from '@space-metaverse-ag/space-ui'
 import type { AppProps } from 'next/app'
 import Script from 'next/script'
 import { store } from 'redux/store'
@@ -48,7 +48,6 @@ const Root = ({ Component, pageProps }: AppPropsWithLayout): JSX.Element => {
       />
 
       <ThemeProvider>
-        <GlobalStyles />
 
         <TopNav
           routes={routes}

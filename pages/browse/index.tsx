@@ -144,7 +144,6 @@ const Browse: React.FC = () => {
     <Page>
       <Head>
         <title>Search | SPACE</title>
-        <meta name='description' content='SPACE Accounts' />
       </Head>
 
       <Header>

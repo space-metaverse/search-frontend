@@ -37,8 +37,9 @@ export default class MyDocument extends Document {
       <Html lang="en-US">
         <Head>
           <link rel='icon' href='/favicon.ico' />
+          <meta name='description' content='SPACE Search' />
         </Head>
-        <body style={{ margin: 0 }}>
+        <body>
           <Main />
 
           <NextScript />

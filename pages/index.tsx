@@ -149,7 +149,6 @@ const App: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     >
       <Head>
         <title>Search | SPACE</title>
-        <meta name='description' content='SPACE Accounts' />
       </Head>
 
       <Page>

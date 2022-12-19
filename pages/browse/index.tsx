@@ -56,6 +56,7 @@ const Sidenav = styled.nav`
 
 const Category = styled(TabsStyles.Button)`
   display: flex;
+  padding: .5rem .5rem .5rem 1rem;
   text-align: left;
   align-items: center;
 

@@ -88,7 +88,7 @@ export const searchApi = createApi({
   endpoints: (builder) => ({
     products: builder.query<ResponseSearchProductsProps, RequestSearchProductsProps>({
       query: ({ page, search, category }) => ({
-        url: `/search/products?page=${page}${search ? `&search=${search}` : ''}${category ? `&room_categories=${category}` : ''}`,
+        url: `/search/algolia/products?page=${page}${search ? `&search=${search}` : ''}${category ? `&room_categories=${category}` : ''}`,
         method: 'GET'
       })
     })

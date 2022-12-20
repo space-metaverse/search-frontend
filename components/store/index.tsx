@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Card, Chip, Button } from '@space-metaverse-ag/space-ui'
 import { Image as IconImage } from '@space-metaverse-ag/space-ui/icons'
 import type { RoomProps, ProductProps } from 'api/search'
+import Image from 'next/image'
 import Link from 'next/link'
 
 import Styles from './styles'
@@ -13,6 +14,7 @@ export interface StoreProps extends RoomProps {
 
 const Store: React.FC<StoreProps> = ({
   name,
+  image,
   author,
   hub_sid: hubSid,
   hub_slug: hubSlug,
@@ -32,7 +34,15 @@ const Store: React.FC<StoreProps> = ({
     <Styles.Wrapper>
       <Styles.Card>
         <Styles.Image>
-          <IconImage width={40} height={40} />
+          {image && (
+            <Image
+              alt={name}
+              src={image}
+              fill
+            />
+          )}
+
+          {!image && <IconImage width={40} height={40} />}
         </Styles.Image>
 
         <Styles.Content>

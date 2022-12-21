@@ -48,10 +48,7 @@ const Root = ({ Component, pageProps }: AppPropsWithLayout): JSX.Element => {
       />
 
       <ThemeProvider>
-        <TopNav
-          routes={routes}
-          signInRoute="https://auth.tryspace.com/login?redirect=https%3A%2F%2Fapp.tryspace.com"
-        />
+        <TopNav routes={routes} />
 
         {layout(<Component {...pageProps} />)}
       </ThemeProvider>

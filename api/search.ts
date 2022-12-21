@@ -12,6 +12,7 @@ export enum CategoryProps {
 export interface RoomProps {
   name: string
   stars: number
+  image: string
   hub_id: string
   author: {
     name: string

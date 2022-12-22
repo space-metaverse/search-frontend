@@ -58,11 +58,13 @@ const options = [
 ]
 
 interface LayoutProps {
+  category: string | null
   categories: FacetsProps['room.categories']
   onCategory: Dispatch<SetStateAction<string | null>>
 }
 
 const Layout: NextPage<PropsWithChildren<LayoutProps>> = ({
+  category,
   children,
   categories,
   onCategory
@@ -80,10 +82,11 @@ const Layout: NextPage<PropsWithChildren<LayoutProps>> = ({
         Icon: findOption?.Icon ?? Space,
         label: `${key} (${value})`,
         route: key,
-        disabled: false
+        disabled: false,
+        selected: category ? category === key : false
       })
     })
-  }, [categories])
+  }, [category, categories])
 
   return (
     <Styled.Wrapper>

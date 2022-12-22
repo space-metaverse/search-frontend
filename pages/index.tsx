@@ -144,12 +144,12 @@ const App: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
 
   return (
     <Layout
+      category={category}
       categories={facets['room.categories']}
       onCategory={setCategory}
     >
       <Head>
         <title>Search | SPACE</title>
-        <meta name='description' content='SPACE Accounts' />
       </Head>
 
       <Page>
@@ -207,7 +207,7 @@ const App: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
 export const getStaticProps: GetStaticProps<{ facets: FacetsProps }> = async () => {
   const baseUrl = getBaseURL()
 
-  const res = await axios.get(`${baseUrl}/search/facets`)
+  const res = await axios.get(`${baseUrl}/search/algolia/facets`)
 
   const facets: FacetsProps = await res.data
 

@@ -2,14 +2,14 @@ import { useState } from 'react'
 
 import { Card, Chip, Button } from '@space-metaverse-ag/space-ui'
 import { Image as IconImage } from '@space-metaverse-ag/space-ui/icons'
-import type { RoomProps, ProductProps } from 'api/search'
+import type { AlgoliaRoomProps, AlgoliaProductProps } from 'api/search'
 import Image from 'next/image'
 import Link from 'next/link'
 
 import Styles from './styles'
 
-export interface StoreProps extends RoomProps {
-  products: ProductProps[]
+export interface StoreProps extends AlgoliaRoomProps {
+  products: AlgoliaProductProps[]
 }
 
 const Store: React.FC<StoreProps> = ({

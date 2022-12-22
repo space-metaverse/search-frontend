@@ -2,7 +2,7 @@ import { useMemo, useState, useEffect } from 'react'
 
 import { Spinner, TextInput, Pagination } from '@space-metaverse-ag/space-ui'
 import { Products as IconProducts } from '@space-metaverse-ag/space-ui/icons'
-import { getBaseURL, type FacetsProps, useProductsQuery } from 'api/search'
+import { getBaseURL, type FacetsProps, useAlgoliaProductsQuery } from 'api/search'
 import axios from 'axios'
 import Layout from 'components/layout'
 import Card, { type StoreProps } from 'components/store'
@@ -103,7 +103,7 @@ const App: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     data,
     isLoading,
     isFetching
-  } = useProductsQuery({
+  } = useAlgoliaProductsQuery({
     page: page - 1,
     search: debounce,
     category

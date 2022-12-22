@@ -1,15 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-export enum CategoryProps {
-  'art',
-  'concerts',
-  'meetups',
-  'retail',
-  'shows',
-  'sports'
-}
-
-export interface RoomProps {
+export interface AlgoliaRoomProps {
   name: string
   stars: number
   image: string
@@ -36,13 +27,13 @@ export interface FacetsProps {
     phygital: number
     physical: number
   }
-  'room.categories': Record<CategoryProps, number>
+  'room.categories': Record<string, number>
   'room.author.name': Record<string, number>
 }
 
-export interface ProductProps {
+export interface AlgoliaProductProps {
   name: string
-  room: RoomProps
+  room: AlgoliaRoomProps
   price: number
   currency: string
   objectID: string
@@ -53,14 +44,14 @@ export interface ProductProps {
   thumbnail_url: string
 }
 
-interface RequestSearchProductsProps {
+interface RequestSearchAlgoliaProductsProps {
   page: number
   search: string
   category: string | null
 }
 
-interface ResponseSearchProductsProps {
-  hits: ProductProps[]
+interface ResponseSearchAlgoliaProductsProps {
+  hits: AlgoliaProductProps[]
   page: number
   params: string
   nbHits: number
@@ -87,7 +78,7 @@ export const getBaseURL = (): string => {
 export const searchApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: getBaseURL() }),
   endpoints: (builder) => ({
-    products: builder.query<ResponseSearchProductsProps, RequestSearchProductsProps>({
+    algoliaProducts: builder.query<ResponseSearchAlgoliaProductsProps, RequestSearchAlgoliaProductsProps>({
       query: ({ page, search, category }) => ({
         url: `/search/algolia/products?page=${page}${search ? `&search=${search}` : ''}${category ? `&room_categories=${category}` : ''}`,
         method: 'GET'
@@ -98,5 +89,5 @@ export const searchApi = createApi({
 })
 
 export const {
-  useProductsQuery
+  useAlgoliaProductsQuery
 } = searchApi

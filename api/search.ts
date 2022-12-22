@@ -44,6 +44,12 @@ export interface AlgoliaProductProps {
   thumbnail_url: string
 }
 
+interface RequestSearchProductsProps {
+  page: number
+  type: string
+  category: string
+}
+
 interface RequestSearchAlgoliaProductsProps {
   page: number
   search: string
@@ -62,7 +68,7 @@ interface ResponseSearchAlgoliaProductsProps {
 export const getBaseURL = (): string => {
   switch (process.env.NEXT_PUBLIC_ENV) {
     case 'local':
-      return 'http://localhost:3001'
+      return 'http://localhost:3333'
     case 'dev':
       return 'https://api.dev.tryspace.com'
     case 'qa':
@@ -78,6 +84,12 @@ export const getBaseURL = (): string => {
 export const searchApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: getBaseURL() }),
   endpoints: (builder) => ({
+    rooms: builder.query<ResponseSearchAlgoliaProductsProps, RequestSearchProductsProps>({
+      query: ({ type, page, category }) => ({
+        url: `/search/rooms?page=${page}&size=16&orderBy=${type}${category !== 'all' ? `&category=${category}` : ''}`,
+        method: 'GET'
+      })
+    }),
     algoliaProducts: builder.query<ResponseSearchAlgoliaProductsProps, RequestSearchAlgoliaProductsProps>({
       query: ({ page, search, category }) => ({
         url: `/search/algolia/products?page=${page}${search ? `&search=${search}` : ''}${category ? `&room_categories=${category}` : ''}`,
@@ -89,5 +101,6 @@ export const searchApi = createApi({
 })
 
 export const {
+  useRoomsQuery,
   useAlgoliaProductsQuery
 } = searchApi

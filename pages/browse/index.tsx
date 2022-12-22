@@ -1,5 +1,6 @@
 import { useState } from 'react'
 
+import { useRoomsQuery } from 'api/search'
 import icons from 'components/icons'
 import Tabs, { TabsStyles } from 'components/tabs'
 import Head from 'next/head'
@@ -138,7 +139,20 @@ const categories = [
 
 const Browse: React.FC = () => {
   const [tab, setTab] = useState('FEATURED')
+  const [page, setPage] = useState(1)
   const [category, setCategory] = useState('all')
+
+  const {
+    data,
+    isLoading,
+    isFetching
+  } = useRoomsQuery({
+    page,
+    type: tab,
+    category
+  })
+
+  console.log(data)
 
   return (
     <Page>

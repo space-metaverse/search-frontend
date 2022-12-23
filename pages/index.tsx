@@ -177,7 +177,7 @@ export const getStaticProps: GetStaticProps<{ facets: FacetsProps }> = async () 
 
   const res = await axios.get(`${baseUrl}/search/algolia/facets`)
 
-  const facets: FacetsProps = await res.data
+  const facets: FacetsProps = res.data
 
   return {
     props: {

@@ -16,6 +16,13 @@ export interface RoomProps {
   description: string | null
 }
 
+export interface CategoryProps {
+  id: number
+  name: string
+  slug: string
+  children: Array<Omit<CategoryProps, 'children'>>
+}
+
 export interface AlgoliaRoomProps {
   name: string
   stars: number

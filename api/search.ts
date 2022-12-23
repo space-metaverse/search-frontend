@@ -1,5 +1,21 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
+export interface RoomProps {
+  id: string
+  slug: string
+  name: string
+  stars: number
+  weight: number
+  hub_sid: string
+  thumbnail: string | null
+  room_size: number | null
+  categories: string[]
+  updated_at: Date
+  author_name: string | null
+  inserted_at: Date
+  description: string | null
+}
+
 export interface AlgoliaRoomProps {
   name: string
   stars: number
@@ -50,6 +66,12 @@ interface RequestSearchProductsProps {
   category: string
 }
 
+interface ResponseSearchProductsProps {
+  page: number
+  data: RoomProps[]
+  next_page: boolean
+}
+
 interface RequestSearchAlgoliaProductsProps {
   page: number
   search: string
@@ -84,7 +106,7 @@ export const getBaseURL = (): string => {
 export const searchApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: getBaseURL() }),
   endpoints: (builder) => ({
-    rooms: builder.query<ResponseSearchAlgoliaProductsProps, RequestSearchProductsProps>({
+    rooms: builder.query<ResponseSearchProductsProps, RequestSearchProductsProps>({
       query: ({ type, page, category }) => ({
         url: `/search/rooms?page=${page}&size=16&orderBy=${type}${category !== 'all' ? `&category=${category}` : ''}`,
         method: 'GET'

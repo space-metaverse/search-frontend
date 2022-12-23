@@ -1,11 +1,11 @@
 import { useMemo, useState, useEffect } from 'react'
 
 import { Spinner, TextInput, Pagination } from '@space-metaverse-ag/space-ui'
-import { Products as IconProducts } from '@space-metaverse-ag/space-ui/icons'
 import { getBaseURL, type FacetsProps, useAlgoliaProductsQuery } from 'api/search'
 import axios from 'axios'
+import Empty from 'components/empty'
 import Layout from 'components/layout'
-import Card, { type StoreProps } from 'components/store'
+import Card, { type StoreProps } from 'components/store/algolia'
 import useDebounce from 'hooks/useDebounce'
 import { type NextPage, type GetStaticProps, InferGetStaticPropsType } from 'next'
 import Head from 'next/head'
@@ -19,34 +19,6 @@ const Page = styled.div`
 
   .paginate {
     margin: 1.5rem auto;
-  }
-`
-
-const Empty = styled.div`
-  width: 100%;
-  display: flex;
-  padding: 10rem 1.5rem;
-  align-items: center;
-  border-radius: ${({ theme }) => `${theme.radius.xl} 0 0 ${theme.radius.xl}`};
-  flex-direction: column;
-  justify-content: center;
-  background-color: ${({ theme }) => theme.colors.dark['100']};
-
-  h2 {
-    ${({ theme }) => theme.fonts.size.xl};
-    color: ${({ theme }) => theme.colors.dark['800']};
-    max-width: 18rem;
-    margin-top: 1rem;
-    text-align: center;
-    font-weight: ${({ theme }) => theme.fonts.weight.bold};
-  
-    b {
-      color: ${({ theme }) => theme.colors.blue['400']};
-    }
-  }
-
-  path {
-    stroke: ${({ theme }) => theme.colors.blue['400']};
   }
 `
 
@@ -173,11 +145,8 @@ const App: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
 
           {!isFetching && !isLoading && groupByStore.length <= 0 && (
             <Empty>
-              <IconProducts width={40} height={40} />
-              <h2>
-                Sorry, we couldn&apos;t find any information for
-                <b> &apos;{debounce}&apos;</b>
-              </h2>
+              Sorry, we couldn&apos;t find any information for
+              <b> &apos;{debounce}&apos;</b>
             </Empty>
           )}
 

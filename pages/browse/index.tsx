@@ -1,7 +1,10 @@
 import { useState } from 'react'
 
+import { Spinner } from '@space-metaverse-ag/space-ui'
 import { useRoomsQuery } from 'api/search'
+import Empty from 'components/empty'
 import icons from 'components/icons'
+import Card from 'components/store/room'
 import Tabs, { TabsStyles } from 'components/tabs'
 import Head from 'next/head'
 import styled from 'styled-components'
@@ -42,7 +45,12 @@ const Header = styled.div`
   }
 `
 
-const Wrapper = styled.div``
+const Wrapper = styled.div`
+  gap: 2rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+`
 
 const Sidenav = styled.nav`
   gap: 1.5rem;
@@ -152,8 +160,6 @@ const Browse: React.FC = () => {
     category
   })
 
-  console.log(data)
-
   return (
     <Page>
       <Head>
@@ -197,7 +203,25 @@ const Browse: React.FC = () => {
           ))}
         </Sidenav>
 
-        <Wrapper />
+        {(isFetching || isLoading) && (
+          <Wrapper>
+            <Spinner />
+          </Wrapper>
+        )}
+
+        {data && !isFetching && !isLoading && (
+          <Wrapper>
+            {!isFetching && !isLoading && data.data.length <= 0 && (
+              <Empty>
+                We did not find rooms with this category.
+              </Empty>
+            )}
+
+            {!isFetching && !isLoading && data.data.map((store) => (
+              <Card key={store.id} {...store} />
+            ))}
+          </Wrapper>
+        )}
       </Body>
     </Page>
   )

@@ -45,13 +45,13 @@ const Store: React.FC<StoreProps> = ({
           {!image && <IconImage width={40} height={40} />}
         </Styles.Image>
 
-        <Styles.Content>
+        <Styles.Content className="is-algolia">
           <h3>{name}</h3>
 
           <span>By {author.name}</span>
 
           {categories.length > 0 && (
-            <div>
+            <div className="card-content-categories">
               {categories.map((category) => (
                 <Chip
                   key={category}

@@ -36,6 +36,7 @@ const Sidenav = styled.nav`
 
   @media screen and (max-width: 1199px) {
     top: inherit;
+    left: 1.25rem;
     width: calc(100% - 2.5rem);
     height: 0;
     opacity: 0;

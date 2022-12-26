@@ -1,5 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
+export interface ProductProps {
+  name: string
+  price: number
+  thumbnail: string | null
+  description: string | null
+}
+
 export interface RoomProps {
   id: string
   slug: string
@@ -7,6 +14,7 @@ export interface RoomProps {
   stars: number
   weight: number
   hub_sid: string
+  products: ProductProps[]
   thumbnail: string | null
   room_size: number | null
   categories: string[]

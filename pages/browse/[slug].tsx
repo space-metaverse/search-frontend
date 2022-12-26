@@ -1,10 +1,17 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 
-import { Chip, Button, Spinner } from '@space-metaverse-ag/space-ui'
+import {
+  Chip,
+  Card,
+  Modal,
+  Button,
+  Spinner,
+  type ModalProps
+} from '@space-metaverse-ag/space-ui'
 import { Share as IconShare, Image as IconImage } from '@space-metaverse-ag/space-ui/icons'
-import { getBaseURL, type RoomProps } from 'api/search'
+import { getBaseURL, type RoomProps, type ProductProps } from 'api/search'
 import axios from 'axios'
-import Tabs, { type TabsProps } from 'components/tabs'
+// import Tabs, { type TabsProps } from 'components/tabs'
 import type { GetStaticPaths, GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -141,23 +148,146 @@ const Products = styled.div`
   display: flex;
   flex-direction: column;
 
-  .products-head {
-    gap: 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  .modal {
+    > div {
+      max-width: 31rem;
 
-    h2 {
-      ${({ theme }) => theme.fonts.size['2xl']};
-      color: ${({ theme }) => theme.colors.dark[800]};
-      font-weight: ${({ theme }) => theme.fonts.weight.bold};
+      > div {
+        padding: 0;
+      }
+    }
+
+    &-wrapper {
+      display: flex;
+      flex-direction: column;
+
+      &-body {
+        display: flex;
+        padding: 2rem;
+        flex-direction: column;
+
+        h3,
+        span {
+          ${({ theme }) => theme.fonts.size.xl};
+        }
+
+        a {
+          margin-top: 2rem;
+
+          &,
+          button {
+            width: 100%;
+          }
+        }
+
+        p {
+          ${({ theme }) => theme.fonts.size.md};
+          color: ${({ theme }) => theme.colors.dark[600]};
+          margin-top: .5rem;
+          font-family: ${({ theme }) => theme.fonts.family.body};
+        }
+
+        h3 {
+          color: ${({ theme }) => theme.colors.dark[800]};
+        }
+
+        span {
+          color: ${({ theme }) => theme.colors.dark[600]};
+        }
+      }
+
+      &-image {
+        width: 100%;
+        height: 25rem;
+        display: flex;
+        position: relative;
+        align-items: center;
+        border-radius: ${({ theme }) => theme.radius['2xl']};
+        justify-content: center;
+
+        img {
+          border-radius: ${({ theme }) => theme.radius['2xl']};
+        }
+      }
+    }
+  }
+
+  .products {
+    &-head {
+      gap: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      h2 {
+        ${({ theme }) => theme.fonts.size['2xl']};
+        color: ${({ theme }) => theme.colors.dark[800]};
+        font-weight: ${({ theme }) => theme.fonts.weight.normal};
+        
+        b {
+          font-weight: ${({ theme }) => theme.fonts.weight.bold};
+          margin-right: 1.5rem;
+        }
+      }
+    }
+
+    &-body {
+      gap: 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+
+      h2 {
+        ${({ theme }) => theme.fonts.size.xl};
+        color: ${({ theme }) => theme.colors.dark[800]};
+      }
+
+      span {
+        ${({ theme }) => theme.fonts.size.md};
+        color: ${({ theme }) => theme.colors.dark[600]};
+        margin-top: .5rem;
+        font-family: ${({ theme }) => theme.fonts.family.body};
+      }
+    }
+  }
+
+  @media screen and (max-width: 1024px) {
+    .products-body {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media screen and (max-width: 724px) {
+    .products-body {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media screen and (max-width: 524px) {
+    .products-body {
+      grid-template-columns: repeat(1, 1fr);
+
+      h2 {
+        ${({ theme }) => theme.fonts.size.md};
+      }
+
+      img {
+        height: 11rem;
+        min-height: 11rem;
+      }
+
+      > div {
+        width: 100%;
+      }
     }
   }
 `
 
 const Room: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({ data }) => {
   const [copied, setCopied] = useState(false)
-  const [category, setCategory] = useState('all')
+  const [product, setProduct] = useState<ProductProps | null>(null)
+  // const [category, setCategory] = useState('all')
+
+  const ref = useRef<ModalProps>(null)
 
   const {
     isFallback
@@ -169,10 +299,14 @@ const Room: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({ data }
     name,
     slug,
     hub_sid: hubSid,
+    products,
     thumbnail,
     categories,
-    description
+    description,
+    ...rest
   } = data
+
+  console.log(rest)
 
   const store = `https://app.tryspace.com/${hubSid}/${slug}`
 
@@ -184,18 +318,18 @@ const Room: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({ data }
     setTimeout(() => setCopied(false), 2000)
   }
 
-  const listCategories = (): TabsProps['options'] => {
-    return ([
-      {
-        key: 'all',
-        label: 'All'
-      },
-      ...categories?.map((cat) => ({
-        key: cat,
-        label: cat
-      }))
-    ])
-  }
+  // const listCategories = (): TabsProps['options'] => {
+  //   return ([
+  //     {
+  //       key: 'all',
+  //       label: 'All'
+  //     },
+  //     ...categories?.map((cat) => ({
+  //       key: cat,
+  //       label: cat
+  //     }))
+  //   ])
+  // }
 
   return (
     <Page>
@@ -263,19 +397,99 @@ const Room: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({ data }
         <div className="body-preview" />
       </Body>
 
-      <Products>
-        <div className="products-head">
-          <h2>Products</h2>
+      {products.length > 0 && (
+        <Products>
+          <div className="products-head">
+            <h2>
+              <b>Products</b>
+              {products.length} result{products.length > 1 ? 's' : ''}
+            </h2>
 
-          {categories.length > 0 && (
-            <Tabs
-              options={listCategories()}
-              selected={category}
-              onSelected={setCategory}
-          />
-          )}
-        </div>
-      </Products>
+            {/* {categories.length > 0 && (
+              <Tabs
+                options={listCategories()}
+                selected={category}
+                onSelected={setCategory}
+            />
+            )} */}
+          </div>
+
+          <div className="products-body">
+            {products.map((props, index) => {
+              const {
+                name,
+                price,
+                thumbnail
+              } = props
+
+              return (
+                <Card
+                  key={`${name}-${index}`}
+                  image={thumbnail ?? ''}
+                  onClick={() => {
+                    setProduct(props)
+
+                    ref.current?.opened()
+                  }}
+                >
+                  <h2>{name}</h2>
+
+                  <span>
+                    {price
+                      ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'usd' }).format(price)
+                      : '-'}
+                  </span>
+                </Card>
+              )
+            })}
+          </div>
+
+          <Modal
+            ref={ref}
+            close={false}
+            className="modal"
+          >
+            {product && (
+              <div className="modal-wrapper">
+                <div className="modal-wrapper-image">
+                  {!product.thumbnail && <IconImage width={40} height={40} />}
+
+                  {product.thumbnail && (
+                    <Image
+                      src={product.thumbnail}
+                      alt=""
+                      fill
+                    />
+                  )}
+                </div>
+
+                <div className="modal-wrapper-body">
+                  <h3>{product.name}</h3>
+
+                  {product.price && (
+                    <span>
+                      {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'usd' }).format(product.price)}
+                    </span>
+                  )}
+
+                  {product.description && <p>{product.description}</p>}
+
+                  <Link
+                    href={store}
+                    target="_blank"
+                  >
+                    <Button
+                      size="medium"
+                      color="blue"
+                      label="VIEW PRODUCT IN 3D STORE"
+                    />
+                  </Link>
+                </div>
+              </div>
+            )}
+          </Modal>
+        </Products>
+      )}
     </Page>
   )
 }

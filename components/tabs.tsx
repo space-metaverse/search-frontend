@@ -3,7 +3,7 @@ import type { Dispatch, SetStateAction } from 'react'
 import { motion } from 'framer-motion'
 import styled from 'styled-components'
 
-interface TabsProps {
+export interface TabsProps {
   options: Array<{
     key: string
     label: string

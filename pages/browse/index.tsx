@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 
 import { Button, Spinner } from '@space-metaverse-ag/space-ui'
 import { getBaseURL, useRoomsQuery, type CategoryProps } from 'api/search'
@@ -9,6 +9,7 @@ import Card from 'components/store/room'
 import Tabs from 'components/tabs'
 import { type NextPage, type GetStaticProps, InferGetStaticPropsType } from 'next'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 import styled from 'styled-components'
 
 const Page = styled.div`
@@ -28,6 +29,10 @@ const Body = styled.div`
   gap: 1.5rem;
   display: flex;
   margin-top: 2.5rem;
+
+  @media screen and (max-width: 1199px) {
+    flex-direction: column;
+  }
 `
 
 const Header = styled.div`
@@ -43,6 +48,15 @@ const Header = styled.div`
     b {
       margin-right: .5rem;
       font-weight: ${({ theme }) => theme.fonts.weight.bold};
+    }
+  }
+
+  @media screen and (max-width: 1199px) {
+    align-items: flex-start;
+    flex-direction: column;
+
+    > h1 {
+      margin-bottom: 2rem;
     }
   }
 `
@@ -79,12 +93,14 @@ const tabs = [
   }
 ]
 
-const Browse: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
-  categories
-}) => {
+const Browse: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({ categories }) => {
   const [tab, setTab] = useState('FEATURED')
   const [page, setPage] = useState(1)
   const [category, setCategory] = useState('all')
+
+  const {
+    query
+  } = useRouter()
 
   const {
     data,
@@ -95,6 +111,10 @@ const Browse: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     type: tab,
     category
   })
+
+  useEffect(() => {
+    if (query?.category) setCategory(query.category as string)
+  }, [query])
 
   const formatCategories = useMemo(() => {
     return [
@@ -108,6 +128,20 @@ const Browse: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     ]
   }, [categories])
 
+  const findCategory = useMemo(() => {
+    return formatCategories.find(({ slug, children }) => {
+      if (slug === category) return true
+
+      if (children.length > 0) {
+        const findChildren = children.filter((elem) => elem.slug === category)
+
+        if (findChildren.length > 0) return true
+      }
+
+      return false
+    })
+  }, [category, formatCategories])
+
   return (
     <Page>
       <Head>
@@ -115,7 +149,7 @@ const Browse: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
       </Head>
 
       <Header>
-        <h1><b>All Categories</b> 3,200 results</h1>
+        <h1><b>{(!findCategory || (findCategory && findCategory.id === -1) ? 'All Categories' : findCategory.name)}</b></h1>
 
         <Tabs
           options={tabs}

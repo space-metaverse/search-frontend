@@ -1,5 +1,13 @@
-import { useState, type Dispatch, type SetStateAction } from 'react'
+import {
+  useRef,
+  useState,
+  type Dispatch,
+  type SetStateAction
+} from 'react'
 
+import { Button } from '@space-metaverse-ag/space-ui'
+import { useOutsideClick } from '@space-metaverse-ag/space-ui/hooks'
+import { Filter, Check } from '@space-metaverse-ag/space-ui/icons'
 import { type CategoryProps } from 'api/search'
 import icons from 'components/icons'
 import { m, AnimatePresence } from 'framer-motion'
@@ -25,6 +33,45 @@ const Sidenav = styled.nav`
   border-radius: ${({ theme }) => theme.radius['2xl']};
   flex-direction: column;
   background-color: ${({ theme }) => theme.colors.dark[100]};
+
+  @media screen and (max-width: 1199px) {
+    top: inherit;
+    width: calc(100% - 2.5rem);
+    height: 0;
+    opacity: 0;
+    position: absolute;
+    max-width: 100%;
+    transition: ${({ theme }) => theme.transitions.ease};
+    pointer-events: none;
+  }
+`
+
+const Action = styled(Button)`
+  display: none;
+
+  div {
+    margin-right: .5rem;
+
+    path {
+      stroke: ${({ theme }) => theme.colors.blue[400]};
+      transition: ${({ theme }) => theme.transitions.ease};
+    }
+  }
+
+  &:hover path {
+    stroke: ${({ theme }) => theme.colors.blue[500]};
+  }
+
+  @media screen and (max-width: 1199px) {
+    display: flex;
+
+    &.is-responsive + nav {
+      height: fit-content;
+      opacity: 1;
+      z-index: 99;
+      pointer-events: auto;
+    }
+  }
 `
 
 const Category = styled(TabsStyles.Button)`
@@ -76,9 +123,30 @@ const Dropdown = styled(m.ul)`
       border-radius: ${({ theme }) => theme.radius.full};
       justify-content: center;
     
-      > span {
+      > div {
+        width: .25rem;
+        height: .25rem;
+        opacity: 0;
         position: absolute;
+        transition: ${({ theme }) => theme.transitions.ease};
+      
+        path {
+          stroke: ${({ theme }) => theme.colors.white};
+          stroke-width: 4px;
+        }
+      }
+    }
+
+    &.is-active {
+      > span {
+        border-color: ${({ theme }) => theme.colors.blue[400]};
         background-color: ${({ theme }) => theme.colors.blue[400]};
+      
+        > div {
+          width: .625rem;
+          height: .625rem;
+          opacity: 100;
+        }
       }
     }
   }
@@ -89,71 +157,94 @@ const Categories: React.FC<CategoriesProps> = ({
   categories,
   onSelected
 }) => {
-  const [tab, setTab] = useState('all')
+  const [dropdown, setDropdown] = useState(-1)
+  const [responsive, setResponsive] = useState(false)
+
+  const ref = useRef<HTMLDivElement>(null)
+
+  useOutsideClick(ref, () => setResponsive(false))
 
   return (
-    <Sidenav>
-      <AnimatePresence
-        mode="popLayout"
-        initial={false}
-      >
-        {categories.map(({ slug, name, children }) => {
-          const actived = tab === slug
-          const hasChildren = children.length > 0
+    <>
+      <Action
+        size="medium"
+        color="blue"
+        label={(
+          <>
+            <Filter width={20} height={20} />
+            FILTERS
+          </>
+        )}
+        outline
+        onClick={() => setResponsive((prev) => !prev)}
+        className={responsive ? 'is-responsive' : ''}
+      />
 
-          return (
-            <m.div key={slug}>
-              <Category
-                onClick={() => {
-                  setTab(slug)
+      <Sidenav ref={ref}>
+        <AnimatePresence
+          mode="popLayout"
+          initial={false}
+        >
+          {categories.map(({ slug, name, children }, index) => {
+            const actived = selected === slug || dropdown === index
+            const hasChildren = children.length > 0
 
-                  if (!hasChildren) onSelected(slug)
-                }}
-                selected={actived}
-              >
-                {name}
+            return (
+              <m.div key={slug}>
+                <Category
+                  onClick={() => {
+                    setDropdown(index)
 
-                {/* <small>
-                  150
-                </small> */}
-
-                {actived && (
-                  <TabsStyles.Bullet
-                    key={slug}
-                    layoutId="categories"
-                  />
-                )}
-              </Category>
-
-              {actived && hasChildren && (
-                <Dropdown
-                  exit={{ top: -16, height: 0, opacity: 0 }}
-                  animate={{
-                    top: 0,
-                    height: 'auto',
-                    opacity: 100
+                    if (!hasChildren) onSelected(slug)
                   }}
-                  initial={{ top: -16, height: 0, opacity: 0 }}
-                  transition={{ type: 'spring' }}
+                  selected={actived}
                 >
-                  {children?.map((elem) => (
-                    <li key={elem.id}>
-                      <m.span>
-                        {elem.slug === selected && (
-                          <m.span />
-                        )}
-                      </m.span>
+                  {name}
 
-                      {elem.name}
-                    </li>
-                  ))}
-                </Dropdown>
-              )}
-            </m.div>
-          )
-        })}
-      </AnimatePresence>
-    </Sidenav>
+                  {/* <small>
+                    150
+                  </small> */}
+
+                  {actived && (
+                    <TabsStyles.Bullet
+                      key={slug}
+                      layoutId="categories"
+                    />
+                  )}
+                </Category>
+
+                {dropdown === index && hasChildren && (
+                  <Dropdown
+                    exit={{ top: -16, height: 0, opacity: 0 }}
+                    animate={{
+                      top: 0,
+                      height: 'auto',
+                      opacity: 100
+                    }}
+                    initial={{ top: -16, height: 0, opacity: 0 }}
+                    transition={{ type: 'spring' }}
+                  >
+                    {children?.map((elem) => (
+                      <li
+                        key={elem.id}
+                        onClick={() => onSelected(elem.slug)}
+                        className={`${elem.slug === selected ? 'is-active' : ''}`}
+                      >
+                        <m.span>
+                          {elem.slug === selected && <Check />}
+                        </m.span>
+
+                        {elem.name}
+                      </li>
+                    ))}
+                  </Dropdown>
+                )}
+              </m.div>
+            )
+          })}
+        </AnimatePresence>
+      </Sidenav>
+    </>
   )
 }
 

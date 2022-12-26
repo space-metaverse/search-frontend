@@ -302,11 +302,8 @@ const Room: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({ data }
     products,
     thumbnail,
     categories,
-    description,
-    ...rest
+    description
   } = data
-
-  console.log(rest)
 
   const store = `https://app.tryspace.com/${hubSid}/${slug}`
 

@@ -116,6 +116,7 @@ const App: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
 
   return (
     <Layout
+      category={category}
       categories={facets['room.categories']}
       onCategory={setCategory}
     >

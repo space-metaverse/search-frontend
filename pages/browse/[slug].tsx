@@ -240,7 +240,7 @@ const Products = styled.div`
         ${({ theme }) => theme.fonts.size.xl};
         color: ${({ theme }) => theme.colors.dark[800]};
       }
-
+      
       span {
         ${({ theme }) => theme.fonts.size.md};
         color: ${({ theme }) => theme.colors.dark[600]};

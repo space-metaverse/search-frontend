@@ -4,6 +4,7 @@ import { Provider } from 'react-redux'
 
 import * as snippet from '@segment/snippet'
 import { TopNav, ThemeProvider } from '@space-metaverse-ag/space-ui'
+import { LazyMotion, domAnimation } from 'framer-motion'
 import type { AppProps } from 'next/app'
 import Script from 'next/script'
 import { store } from 'redux/store'
@@ -50,7 +51,9 @@ const Root = ({ Component, pageProps }: AppPropsWithLayout): JSX.Element => {
       <ThemeProvider>
         <TopNav routes={routes} />
 
-        {layout(<Component {...pageProps} />)}
+        <LazyMotion features={domAnimation}>
+          {layout(<Component {...pageProps} />)}
+        </LazyMotion>
       </ThemeProvider>
     </Provider>
   )

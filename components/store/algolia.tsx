@@ -110,7 +110,7 @@ const Store: React.FC<StoreProps> = ({
           color="grey"
           label={more ? 'Less results' : 'More results'}
           outline
-          onClick={() => setMore((prev) => !prev)}
+          onClick={() => { setMore((prev) => !prev) }}
         />
       )}
     </Styles.Wrapper>

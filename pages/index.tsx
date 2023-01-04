@@ -128,7 +128,7 @@ const App: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
         <TextInput
           label=""
           value={search}
-          onChange={({ target }) => setSearch(target.value)}
+          onChange={({ target }) => { setSearch(target.value) }}
           placeholder="Search for products or stores ..."
         />
 

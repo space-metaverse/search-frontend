@@ -2,14 +2,14 @@ import { useState } from 'react'
 
 import { Card, Chip, Button } from '@space-metaverse-ag/space-ui'
 import { Image as IconImage } from '@space-metaverse-ag/space-ui/icons'
-import type { RoomProps, ProductProps } from 'api/search'
+import type { AlgoliaRoomProps, AlgoliaProductProps } from 'api/search'
 import Image from 'next/image'
 import Link from 'next/link'
 
 import Styles from './styles'
 
-export interface StoreProps extends RoomProps {
-  products: ProductProps[]
+export interface StoreProps extends AlgoliaRoomProps {
+  products: AlgoliaProductProps[]
 }
 
 const Store: React.FC<StoreProps> = ({
@@ -45,13 +45,13 @@ const Store: React.FC<StoreProps> = ({
           {!image && <IconImage width={40} height={40} />}
         </Styles.Image>
 
-        <Styles.Content>
+        <Styles.Content className="is-algolia">
           <h3>{name}</h3>
 
           <span>By {author.name}</span>
 
           {categories.length > 0 && (
-            <div>
+            <div className="card-content-categories">
               {categories.map((category) => (
                 <Chip
                   key={category}
@@ -110,7 +110,7 @@ const Store: React.FC<StoreProps> = ({
           color="grey"
           label={more ? 'Less results' : 'More results'}
           outline
-          onClick={() => setMore((prev) => !prev)}
+          onClick={() => { setMore((prev) => !prev) }}
         />
       )}
     </Styles.Wrapper>

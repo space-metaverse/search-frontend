@@ -1,11 +1,11 @@
 import { useMemo, useState, useEffect } from 'react'
 
 import { Spinner, TextInput, Pagination } from '@space-metaverse-ag/space-ui'
-import { Products as IconProducts } from '@space-metaverse-ag/space-ui/icons'
-import { getBaseURL, type FacetsProps, useProductsQuery } from 'api/search'
+import { getBaseURL, type FacetsProps, useAlgoliaProductsQuery } from 'api/search'
 import axios from 'axios'
+import Empty from 'components/empty'
 import Layout from 'components/layout'
-import Card, { type StoreProps } from 'components/store'
+import Card, { type StoreProps } from 'components/store/algolia'
 import useDebounce from 'hooks/useDebounce'
 import { type NextPage, type GetStaticProps, InferGetStaticPropsType } from 'next'
 import Head from 'next/head'
@@ -22,34 +22,6 @@ const Page = styled.div`
   }
 `
 
-const Empty = styled.div`
-  width: 100%;
-  display: flex;
-  padding: 10rem 1.5rem;
-  align-items: center;
-  border-radius: ${({ theme }) => `${theme.radius.xl} 0 0 ${theme.radius.xl}`};
-  flex-direction: column;
-  justify-content: center;
-  background-color: ${({ theme }) => theme.colors.dark['100']};
-
-  h2 {
-    ${({ theme }) => theme.fonts.size.xl};
-    color: ${({ theme }) => theme.colors.dark['800']};
-    max-width: 18rem;
-    margin-top: 1rem;
-    text-align: center;
-    font-weight: ${({ theme }) => theme.fonts.weight.bold};
-  
-    b {
-      color: ${({ theme }) => theme.colors.blue['400']};
-    }
-  }
-
-  path {
-    stroke: ${({ theme }) => theme.colors.blue['400']};
-  }
-`
-
 const Title = styled.h2`
   ${({ theme }) => theme.fonts.size['3xl']};
   color: ${({ theme }) => theme.colors.dark['800']};
@@ -63,15 +35,15 @@ const Title = styled.h2`
 `
 
 const Products = styled.div`
+  gap: 1.5rem;
+  width: 100%;
   height: 100%;
   margin: 1.5rem 0;
   display: flex;
   position: relative;
   align-items: center;
-  justify-content: center;
-  gap: 1.5rem;
-  width: 100%;
   flex-direction: column;
+  justify-content: center;
 
   .spinner {
     margin: 2rem 0;
@@ -103,7 +75,7 @@ const App: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     data,
     isLoading,
     isFetching
-  } = useProductsQuery({
+  } = useAlgoliaProductsQuery({
     page: page - 1,
     search: debounce,
     category
@@ -156,7 +128,7 @@ const App: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
         <TextInput
           label=""
           value={search}
-          onChange={({ target }) => setSearch(target.value)}
+          onChange={({ target }) => { setSearch(target.value) }}
           placeholder="Search for products or stores ..."
         />
 
@@ -174,11 +146,8 @@ const App: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
 
           {!isFetching && !isLoading && groupByStore.length <= 0 && (
             <Empty>
-              <IconProducts width={40} height={40} />
-              <h2>
-                Sorry, we couldn&apos;t find any information for
-                <b> &apos;{debounce}&apos;</b>
-              </h2>
+              Sorry, we couldn&apos;t find any information for
+              <b> &apos;{debounce}&apos;</b>
             </Empty>
           )}
 
@@ -209,7 +178,7 @@ export const getStaticProps: GetStaticProps<{ facets: FacetsProps }> = async () 
 
   const res = await axios.get(`${baseUrl}/search/algolia/facets`)
 
-  const facets: FacetsProps = await res.data
+  const facets: FacetsProps = res.data
 
   return {
     props: {

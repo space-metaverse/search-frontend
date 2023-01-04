@@ -2,6 +2,7 @@ import Link from 'next/link'
 import styled from 'styled-components'
 
 const Card = styled.div`
+  width: 100%;
   border: ${({ theme }) => `1px solid ${theme.colors.dark['200']}`};
   display: flex;
   border-radius: ${({ theme }) => theme.radius.xl};
@@ -15,7 +16,7 @@ const Image = styled.div`
   position: relative;
   min-width: 24rem;
   max-width: 24rem;
-  min-height: 18rem;
+  min-height: 16rem;
   align-items: center;
   border-radius: ${({ theme }) => `${theme.radius.xl} 0 0 ${theme.radius.xl}`};
   justify-content: center;
@@ -44,9 +45,7 @@ const Content = styled.div`
   > p {
     ${({ theme }) => theme.fonts.size.md};
     color: ${({ theme }) => theme.colors.dark['500']};
-    margin-top: .5rem;
     font-family: ${({ theme }) => theme.fonts.family.body};
-    margin-bottom: 1rem;
   }
 
   > span {
@@ -56,11 +55,39 @@ const Content = styled.div`
     font-family: ${({ theme }) => theme.fonts.family.body};
   }
 
-  > div {
-    gap: .5rem;
-    display: flex;
-    margin-top: .75rem;
-    align-items: center;
+  &.is-room {
+    > p {
+      margin-top: 1rem;
+    }
+  }
+
+  &.is-algolia {
+    > p {
+      margin-top: .5rem;
+      margin-bottom: 1rem;
+    }
+  }
+
+  .card-content {
+    &-actions {
+      gap: 1rem;
+      margin-top: 1.5rem;
+
+      a {
+        text-decoration: none;
+      }
+    }
+
+    &-categories {
+      gap: .5rem;
+      margin-top: .75rem;
+    }
+
+    &-actions,
+    &-categories {
+      display: flex;
+      align-items: center;
+    }
   }
 `
 

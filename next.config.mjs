@@ -15,7 +15,6 @@ export default {
   reactStrictMode: true,
 
   transpilePackages: [
-    '@algolia/autocomplete-shared',
     '@space-metaverse-ag/space-ui'
   ]
 }

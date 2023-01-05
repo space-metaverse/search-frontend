@@ -9,7 +9,7 @@ import { Button } from '@space-metaverse-ag/space-ui'
 import { useOutsideClick } from '@space-metaverse-ag/space-ui/hooks'
 import { Filter, Check } from '@space-metaverse-ag/space-ui/icons'
 import { type CategoryProps } from 'api/search'
-import icons from 'components/icons'
+// import icons from 'components/icons'
 import { m, AnimatePresence } from 'framer-motion'
 import styled from 'styled-components'
 

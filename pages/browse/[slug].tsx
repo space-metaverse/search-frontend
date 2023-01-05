@@ -422,7 +422,7 @@ const Room: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({ data }
               return (
                 <Card
                   key={`${name}-${index}`}
-                  image={thumbnail ?? ''}
+                  image={thumbnail && thumbnail.length > 0 ? thumbnail : '/placeholder.jpg'}
                   onClick={() => {
                     setProduct(props)
 
@@ -500,11 +500,11 @@ export const getStaticPaths: GetStaticPaths = async () => ({
 export const getStaticProps: GetStaticProps<{ data: RoomProps }> = async ({ params }) => {
   const baseUrl = getBaseURL()
 
-  const res = await axios.get(`${baseUrl}/search/rooms/${params?.slug as string}`)
+  const {
+    data
+  } = await axios.get(`${baseUrl}/search/rooms/${params?.slug as string}`)
 
-  const room: RoomProps = res.data
-
-  if (!room) {
+  if (!data) {
     return {
       notFound: true
     }
@@ -512,7 +512,7 @@ export const getStaticProps: GetStaticProps<{ data: RoomProps }> = async ({ para
 
   return {
     props: {
-      data: room
+      data
     },
 
     revalidate: 60 * 60 * 24 // 24h

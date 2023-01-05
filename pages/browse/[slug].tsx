@@ -515,7 +515,7 @@ export const getStaticProps: GetStaticProps<{ data: RoomProps }> = async ({ para
       data
     },
 
-    revalidate: 60 * 60 * 24 // 24h
+    revalidate: 5 * 60 // 5min
   }
 }
 

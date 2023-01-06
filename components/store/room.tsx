@@ -1,15 +1,21 @@
-import { Chip, Button } from '@space-metaverse-ag/space-ui'
+import { Card, Chip, Button } from '@space-metaverse-ag/space-ui'
 import { Image as IconImage } from '@space-metaverse-ag/space-ui/icons'
-import type { RoomProps } from 'api/search'
+import type { ProductProps, RoomProps as ExtendRoomProps } from 'api/search'
 import Image from 'next/image'
 import Link from 'next/link'
 
 import Styles from './styles'
 
+type RoomProps = ExtendRoomProps & {
+  onProduct: (props: ProductProps) => void
+}
+
 const Room: React.FC<RoomProps> = ({
   name,
   slug,
   hub_sid: hubSid,
+  products,
+  onProduct,
   thumbnail,
   categories,
   author_name: authorName,
@@ -72,6 +78,35 @@ const Room: React.FC<RoomProps> = ({
           </div>
         </Styles.Content>
       </Styles.Card>
+
+      {products.length > 0 && (
+        <Styles.Products>
+          {products.map((props, index) => {
+            const {
+              name,
+              price,
+              thumbnail
+            } = props
+
+            return (
+              <Styles.Product
+                as="div"
+                key={`${name}-${index}`}
+                onClick={() => onProduct(props)}
+              >
+                <Card image={thumbnail && thumbnail.length > 0 ? thumbnail : '/placeholder.jpg'}>
+                  <h2>{name}</h2>
+                  <span>
+                    {price
+                      ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(price)
+                      : '-'}
+                  </span>
+                </Card>
+              </Styles.Product>
+            )
+          })}
+        </Styles.Products>
+      )}
     </Styles.Wrapper>
   )
 }

@@ -172,7 +172,11 @@ const Browse: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({ cate
       </Head>
 
       <Header>
-        <h1><b>{(!findCategory || (findCategory && findCategory.slug === 'all') ? 'All Categories' : findCategory.slug)}</b></h1>
+        <h1>
+          <b>{(!findCategory || (findCategory && findCategory.slug === 'all') ? 'All Categories' : findCategory.slug)}</b>
+
+          {findCategory ? `- ${findCategory?.count} results` : ''}
+        </h1>
 
         <Tabs
           options={tabs}

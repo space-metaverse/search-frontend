@@ -28,6 +28,7 @@ export interface CategoryProps {
   id: number
   name: string
   slug: string
+  count: number
   children: Array<Omit<CategoryProps, 'children'>>
 }
 

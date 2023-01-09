@@ -151,18 +151,8 @@ const Browse: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({ cate
     if (query?.category) setCategory(query.category as string)
   }, [query])
 
-  const formatCategories = useMemo(() => {
-    const fields = [{ id: -1, slug: 'all' }, ...categories].map((field) => ({
-      ...field,
-      name: field.slug.toUpperCase(),
-      children: []
-    }))
-
-    return fields
-  }, [categories])
-
   const findCategory = useMemo(() => {
-    return formatCategories.find((field) => {
+    return categories.find((field) => {
       if (field.slug === category) return true
 
       // if (children.length > 0) {
@@ -173,7 +163,7 @@ const Browse: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({ cate
 
       return false
     })
-  }, [category, formatCategories])
+  }, [category, categories])
 
   return (
     <Page>
@@ -194,7 +184,7 @@ const Browse: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({ cate
       <Body>
         <Categories
           selected={category}
-          categories={formatCategories}
+          categories={categories}
           onSelected={setCategory}
         />
 

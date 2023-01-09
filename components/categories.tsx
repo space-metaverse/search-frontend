@@ -186,7 +186,12 @@ const Categories: React.FC<CategoriesProps> = ({
           mode="popLayout"
           initial={false}
         >
-          {categories.map(({ slug, name, children }, index) => {
+          {categories.map(({
+            slug,
+            name,
+            count,
+            children
+          }, index) => {
             const actived = selected === slug || dropdown === index
             const hasChildren = children.length > 0
 
@@ -202,9 +207,9 @@ const Categories: React.FC<CategoriesProps> = ({
                 >
                   {name}
 
-                  {/* <small>
-                    150
-                  </small> */}
+                  <small>
+                    {count}
+                  </small>
 
                   {actived && (
                     <TabsStyles.Bullet

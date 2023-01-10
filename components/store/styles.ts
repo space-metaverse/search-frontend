@@ -93,6 +93,7 @@ const Content = styled.div`
 
 const Product = styled(Link)`
   color: inherit;
+  cursor: pointer;
   text-decoration: none;
 
   > div {

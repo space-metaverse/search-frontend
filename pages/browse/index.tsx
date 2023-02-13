@@ -1,10 +1,26 @@
-import { useMemo, useState, useEffect } from 'react'
+import {
+  useRef,
+  useMemo,
+  useState,
+  useEffect
+} from 'react'
 
-import { Button, Spinner } from '@space-metaverse-ag/space-ui'
-import { getBaseURL, useRoomsQuery, type CategoryProps } from 'api/search'
+import {
+  Modal,
+  Button,
+  Spinner,
+  type ModalProps
+} from '@space-metaverse-ag/space-ui'
+import {
+  getBaseURL,
+  useRoomsQuery,
+  type ProductProps,
+  type CategoryProps
+} from 'api/search'
 import axios from 'axios'
 import Categories from 'components/categories'
 import Empty from 'components/empty'
+import Product from 'components/product'
 import Card from 'components/store/room'
 import Tabs from 'components/tabs'
 import { type NextPage, type GetStaticProps, InferGetStaticPropsType } from 'next'
@@ -18,6 +34,16 @@ const Page = styled.div`
   padding: 1.5rem 4rem;
   margin-top: 6rem;
   flex-direction: column;
+
+  .modal {
+    > div {
+      max-width: 31rem;
+
+      > div {
+        padding: 0;
+      }
+    }
+  }
 
   @media screen and (max-width: 1024px) {
     padding: 0 1.25rem 2rem 1.25rem;
@@ -44,10 +70,11 @@ const Header = styled.div`
     ${({ theme }) => theme.fonts.size['2xl']};
     color: ${({ theme }) => theme.colors.dark[800]};
     font-weight: ${({ theme }) => theme.fonts.weight.normal};
+    text-transform: capitalize;
 
     b {
-      margin-right: .5rem;
       font-weight: ${({ theme }) => theme.fonts.weight.bold};
+      margin-right: .5rem;
     }
   }
 
@@ -93,10 +120,18 @@ const tabs = [
   }
 ]
 
+type ModalProductProps = ProductProps & {
+  sid: string
+  slug: string
+}
+
 const Browse: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({ categories }) => {
   const [tab, setTab] = useState('FEATURED')
   const [page, setPage] = useState(1)
+  const [product, setProduct] = useState<ModalProductProps | null>(null)
   const [category, setCategory] = useState('all')
+
+  const ref = useRef<ModalProps>(null)
 
   const {
     query
@@ -116,31 +151,19 @@ const Browse: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({ cate
     if (query?.category) setCategory(query.category as string)
   }, [query])
 
-  const formatCategories = useMemo(() => {
-    return [
-      {
-        id: -1,
-        name: 'All',
-        slug: 'all',
-        children: []
-      },
-      ...categories
-    ]
-  }, [categories])
-
   const findCategory = useMemo(() => {
-    return formatCategories.find(({ slug, children }) => {
-      if (slug === category) return true
+    return categories.find((field) => {
+      if (field.slug === category) return true
 
-      if (children.length > 0) {
-        const findChildren = children.filter((elem) => elem.slug === category)
+      // if (children.length > 0) {
+      //   const findChildren = children.filter((elem) => elem.slug === category)
 
-        if (findChildren.length > 0) return true
-      }
+      //   if (findChildren.length > 0) return true
+      // }
 
       return false
     })
-  }, [category, formatCategories])
+  }, [category, categories])
 
   return (
     <Page>
@@ -149,7 +172,11 @@ const Browse: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({ cate
       </Head>
 
       <Header>
-        <h1><b>{(!findCategory || (findCategory && findCategory.id === -1) ? 'All Categories' : findCategory.name)}</b></h1>
+        <h1>
+          <b>{(!findCategory || (findCategory && findCategory.slug === 'all') ? 'All Categories' : findCategory.slug)}</b>
+
+          {findCategory ? `- ${findCategory?.count} results` : ''}
+        </h1>
 
         <Tabs
           options={tabs}
@@ -161,7 +188,7 @@ const Browse: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({ cate
       <Body>
         <Categories
           selected={category}
-          categories={formatCategories}
+          categories={categories}
           onSelected={setCategory}
         />
 
@@ -179,7 +206,21 @@ const Browse: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({ cate
               </Empty>
             )}
 
-            {!isLoading && data.data.map((store) => <Card key={store.id} {...store} />)}
+            {!isLoading && data.data.map((store) => (
+              <Card
+                {...store}
+                key={store.id}
+                onProduct={(props) => {
+                  setProduct({
+                    ...props,
+                    sid: store.hub_sid,
+                    slug: store.slug
+                  })
+
+                  ref.current?.opened()
+                }}
+              />
+            ))}
 
             {isFetching && <Spinner />}
 
@@ -194,6 +235,19 @@ const Browse: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({ cate
           </Wrapper>
         )}
       </Body>
+
+      <Modal
+        ref={ref}
+        close={false}
+        className="modal"
+      >
+        {product && (
+          <Product
+            {...product}
+            store={`https://app.tryspace.com/${product.sid}/${product.slug}`}
+          />
+        )}
+      </Modal>
     </Page>
   )
 }
@@ -201,13 +255,13 @@ const Browse: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({ cate
 export const getStaticProps: GetStaticProps<{ categories: CategoryProps[] }> = async () => {
   const baseUrl = getBaseURL()
 
-  const res = await axios.get(`${baseUrl}/search/categories`)
-
-  const categories: CategoryProps[] = res.data
+  const {
+    data
+  } = await axios.get(`${baseUrl}/search/v1/categories`)
 
   return {
     props: {
-      categories: categories || []
+      categories: data || []
     },
 
     revalidate: 60 * 60 * 24 // 24h

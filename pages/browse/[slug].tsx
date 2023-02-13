@@ -12,7 +12,9 @@ import { Share as IconShare, Image as IconImage } from '@space-metaverse-ag/spac
 import { getBaseURL, type RoomProps, type ProductProps } from 'api/search'
 import axios from 'axios'
 // import Tabs, { type TabsProps } from 'components/tabs'
+import Product from 'components/product'
 import type { GetStaticPaths, GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
+import NextHead from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -22,7 +24,7 @@ const Page = styled.div`
   width: 100%;
   margin: 6rem auto 0;
   display: flex;
-  padding: 1.5rem;
+  padding: 1.5rem 1.5rem 5rem;
   max-width: 85.5rem;
   flex-direction: column;
 
@@ -156,60 +158,6 @@ const Products = styled.div`
         padding: 0;
       }
     }
-
-    &-wrapper {
-      display: flex;
-      flex-direction: column;
-
-      &-body {
-        display: flex;
-        padding: 2rem;
-        flex-direction: column;
-
-        h3,
-        span {
-          ${({ theme }) => theme.fonts.size.xl};
-        }
-
-        a {
-          margin-top: 2rem;
-
-          &,
-          button {
-            width: 100%;
-          }
-        }
-
-        p {
-          ${({ theme }) => theme.fonts.size.md};
-          color: ${({ theme }) => theme.colors.dark[600]};
-          margin-top: .5rem;
-          font-family: ${({ theme }) => theme.fonts.family.body};
-        }
-
-        h3 {
-          color: ${({ theme }) => theme.colors.dark[800]};
-        }
-
-        span {
-          color: ${({ theme }) => theme.colors.dark[600]};
-        }
-      }
-
-      &-image {
-        width: 100%;
-        height: 25rem;
-        display: flex;
-        position: relative;
-        align-items: center;
-        border-radius: ${({ theme }) => theme.radius['2xl']};
-        justify-content: center;
-
-        img {
-          border-radius: ${({ theme }) => theme.radius['2xl']};
-        }
-      }
-    }
   }
 
   .products {
@@ -239,13 +187,21 @@ const Products = styled.div`
       h2 {
         ${({ theme }) => theme.fonts.size.xl};
         color: ${({ theme }) => theme.colors.dark[800]};
-      }
+      } 
       
       span {
         ${({ theme }) => theme.fonts.size.md};
         color: ${({ theme }) => theme.colors.dark[600]};
         margin-top: .5rem;
         font-family: ${({ theme }) => theme.fonts.family.body};
+      }
+
+      > div  {
+        width: 100%;
+
+        img {
+          height: 20rem;
+        }
       }
     }
   }
@@ -330,6 +286,10 @@ const Room: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({ data }
 
   return (
     <Page>
+      <NextHead>
+        <title>{name} | SPACE</title>
+      </NextHead>
+
       <Banner>
         {thumbnail && (
           <Image
@@ -422,7 +382,7 @@ const Room: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({ data }
               return (
                 <Card
                   key={`${name}-${index}`}
-                  image={thumbnail ?? ''}
+                  image={thumbnail && thumbnail.length > 0 ? thumbnail : '/placeholder.jpg'}
                   onClick={() => {
                     setProduct(props)
 
@@ -447,42 +407,10 @@ const Room: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({ data }
             className="modal"
           >
             {product && (
-              <div className="modal-wrapper">
-                <div className="modal-wrapper-image">
-                  {!product.thumbnail && <IconImage width={40} height={40} />}
-
-                  {product.thumbnail && (
-                    <Image
-                      src={product.thumbnail}
-                      alt=""
-                      fill
-                    />
-                  )}
-                </div>
-
-                <div className="modal-wrapper-body">
-                  <h3>{product.name}</h3>
-
-                  {product.price && (
-                    <span>
-                      {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'usd' }).format(product.price)}
-                    </span>
-                  )}
-
-                  {product.description && <p>{product.description}</p>}
-
-                  <Link
-                    href={store}
-                    target="_blank"
-                  >
-                    <Button
-                      size="medium"
-                      color="blue"
-                      label="VIEW PRODUCT IN 3D STORE"
-                    />
-                  </Link>
-                </div>
-              </div>
+              <Product
+                {...product}
+                store={store}
+              />
             )}
           </Modal>
         </Products>
@@ -500,11 +428,11 @@ export const getStaticPaths: GetStaticPaths = async () => ({
 export const getStaticProps: GetStaticProps<{ data: RoomProps }> = async ({ params }) => {
   const baseUrl = getBaseURL()
 
-  const res = await axios.get(`${baseUrl}/search/rooms/${params?.slug as string}`)
+  const {
+    data
+  } = await axios.get(`${baseUrl}/search/rooms/${params?.slug as string}`)
 
-  const room: RoomProps = res.data
-
-  if (!room) {
+  if (!data) {
     return {
       notFound: true
     }
@@ -512,10 +440,10 @@ export const getStaticProps: GetStaticProps<{ data: RoomProps }> = async ({ para
 
   return {
     props: {
-      data: room
+      data
     },
 
-    revalidate: 60 * 60 * 24 // 24h
+    revalidate: 5 * 60 // 5min
   }
 }
 

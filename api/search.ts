@@ -28,6 +28,7 @@ export interface CategoryProps {
   id: number
   name: string
   slug: string
+  count: number
   children: Array<Omit<CategoryProps, 'children'>>
 }
 
@@ -78,7 +79,7 @@ export interface AlgoliaProductProps {
 interface RequestSearchProductsProps {
   page: number
   type: string
-  category: string
+  category: string | null
 }
 
 interface ResponseSearchProductsProps {
@@ -123,7 +124,7 @@ export const searchApi = createApi({
   endpoints: (builder) => ({
     rooms: builder.query<ResponseSearchProductsProps, RequestSearchProductsProps>({
       query: ({ type, page, category }) => ({
-        url: `/search/rooms?page=${page}&size=16&orderBy=${type}${category !== 'all' ? `&category=${category}` : ''}`,
+        url: `/search/rooms?page=${page}&size=16&showProducts=true&orderBy=${type}${category && category !== 'all' ? `&category=${category}` : ''}`,
         method: 'GET'
       })
     }),
